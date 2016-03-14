@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<!-- INTERFACE -->
+	<cc:interface>
+		<cc:attribute name="proc" required="true" type="web.mbeans.TopicsProcessor"/>
+	</cc:interface>
+
+	<!-- IMPLEMENTATION -->
+	<cc:implementation>
+
+		<h:form>
+
+			<p:dataList value="#{cc.attrs.proc.topicsList}" var="t">
+				<p:outputPanel rendered="#{not cc.attrs.proc.admin and not t.isDelete}" >
+					<h:outputText value="#{t.title}"/>
+					
+					<p:dataList value="#{t.postsList}" var="p">
+						<h:outputText value="#{p.authorId.name}: #{p.body}" rendered="#{not p.isDeleted}"/>
+					</p:dataList>
+
+					
+				</p:outputPanel>
+
+				<p:outputPanel rendered="#{cc.attrs.proc.admin}">
+					<p:inplace editor="true">
+						<p:ajax event="save" listener="#{cc.attrs.proc.updateTopic(t)}" update="@form" process="@this" />
+						<p:inputText value="#{t.title}"/>
+					</p:inplace>
+					<p:commandLink rendered="#{not t.isDelete}" value="Удалить тему" 
+								   actionListener="#{cc.attrs.proc.deleteTopic(t)}"/>
+					
+					<p:dataList value="#{t.postsList}" var="p">
+						<h:outputText value="#{p.authorId.name}: #{p.body}"/>
+					</p:dataList>
+					
+				</p:outputPanel>
+			</p:dataList>
+
+			<p:commandLink value="Добавить тему" rendered="#{cc.attrs.proc.admin}" 
+						   actionListener="#{cc.attrs.proc.setBody('')}" update="dlg1" oncomplete="PF('dlg1').show();"/>
+			<p:dialog rendered="#{cc.attrs.proc.admin}" header="Новая тема" 
+					  id="dlg1" widgetVar="dlg1" modal="true" height="250">
+				<p:inputTextarea value="#{cc.attrs.proc.body}" cols="70" id="topicBody"/>
+				<br/>
+				<p:commandButton value="Сохранить" actionListener="#{cc.attrs.proc.createTopic()}"
+								 process="topicBody" update="@form" oncomplete="PF('dlg1').hide();"/>
+				<p:commandButton value="Отменить" onclick="PF('dlg1').hide();"/>
+			</p:dialog>
+		</h:form>
+
+	</cc:implementation>
+</html>

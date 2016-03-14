@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/main.xhtml">
+
+			<f:metadata>
+				<f:viewAction action="#{ctx.checkUserRole('*')}" immediate="true" />
+			</f:metadata>
+			
+            <ui:define name="title">
+                Профиль участника ExProfesso
+            </ui:define>
+			
+            <ui:define name="content">
+			
+				<h:outputStylesheet name="css/content.css"/>
+				<h:outputStylesheet name="css/upload.css"/>
+					
+				<p:messages id="msgs"/>
+				
+				<h:form>
+
+					<h:panelGrid columns="2" rowClasses="row-top-aligned">
+						
+						<p:outputLabel for="userName" value="Имя"/>
+						<p:inputText value="#{profile.user.name}" required="true" id="userName"/>
+						
+						<p:fileUpload fileUploadListener="#{profile.uploadListener}" 
+								  label="Фото"
+								  update="avatar msgs"
+								  auto="true"
+								  accept="image/*"
+								  previewWidth="0"
+								  />
+						<p:graphicImage id="avatar" value="#{profile.user.avatarUrl}" class="avatar-medium"/>
+
+						<p:outputLabel for="about" value="О себе"/>
+						<p:editor value="#{profile.user.personalInfo}" width="600" id="about"/>
+
+					</h:panelGrid>
+
+					<p:commandButton value="Сохранить" actionListener="#{profile.saveUser}" 
+									 update="@form msgs" process="userName about"/>
+					
+				</h:form>
+				
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

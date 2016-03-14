@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" docBase="C:\Java\projects\cursus2\build\web">
+  <Resource name="jdbc/cursus" auth="Container" type="javax.sql.DataSource"
+               username="jetty" password="111" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/cursus2?zeroDateTimeBehavior=convertToNull"/>
+<!-- maxTotal="100" maxIdle="30" maxWaitMillis="10000" -->
+</Context>

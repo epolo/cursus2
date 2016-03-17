@@ -81,4 +81,8 @@ public class RequestMBean {
 	
 	private void auth2() {
 	}
+	
+	public void redirect(String url) throws IOException {
+		FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+	}
 }

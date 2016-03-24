@@ -1,0 +1,6 @@
+/build/
+/dist/
+/nbproject/private/
+/target/
+/deploy/tomcat/logs/*
+/deploy/tomcat/work

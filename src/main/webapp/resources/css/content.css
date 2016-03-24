@@ -1,0 +1,68 @@
+
+.img {
+	width: auto;
+	height: auto;
+}
+img.avatar-medium {
+	max-width: 120px;
+	max-height: 120px;
+	width: auto;
+	height: auto;
+	margin: 10px;
+}
+div.avatar-small {
+	width: 80px;
+	height: 80px;
+	background-position: 50% 50%;
+	background-size: cover;
+}
+div.avatar-medium {
+	width: 120px;
+	height: 120px;
+	background-position: 50% 50%;
+	background-size: cover;
+	margin-right: 20px;
+	margin-top: 20px;
+	vertical-align: top;
+}
+.course-features {
+	border-right: 1px solid;
+	background-color: #ddd;
+	font: monospace;
+	padding: 7px;
+}
+.course-list {
+	list-style: none;
+	vertical-align: top;
+}
+
+.status-open {
+	color: #58BDA6;
+}
+
+.status-begin {
+	color: #E47B73;
+}
+
+
+.status-close {
+	color: #9096A6;
+}
+
+.course-icon {
+	background: url("/images/checkbox.svg") -15px -8px no-repeat;
+	width: 14px;
+	height: 14px;
+}
+
+.course-icon.course-selected {
+	background-position: -44px -8px;
+}
+
+.course-icon.course-disabled {
+	background-position: -44px -8px;
+}
+
+.row-top-aligned {
+	vertical-align: top;
+}

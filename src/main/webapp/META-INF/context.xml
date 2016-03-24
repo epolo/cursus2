@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/cursus2">
+  <Resource name="jdbc/cursus" auth="Container" type="javax.sql.DataSource"
+               username="jetty" password="111" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/cursus2?zeroDateTimeBehavior=convertToNull"/>
+<!-- maxTotal="100" maxIdle="30" maxWaitMillis="10000" -->
+    <!-- Switch off session serialization -->
+
+    <Manager className="org.apache.catalina.session.PersistentManager" debug="0" distributable="false"
+             saveOnRestart="false">
+        <Store className="org.apache.catalina.session.FileStore"/>
+    </Manager>
+
+</Context>

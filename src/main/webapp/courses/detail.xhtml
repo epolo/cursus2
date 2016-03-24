@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/main.xhtml">
+
+			<f:metadata>
+				<f:viewAction action="#{ctx.checkNotNull(course.selected)}" immediate="true" />
+			</f:metadata>
+			
+            <ui:define name="title">
+                Описание курса
+            </ui:define>
+
+            <ui:define name="content">
+
+				<h:outputStylesheet name="css/content.css"/>
+				
+				<p:messages id="msgs" closable="true"/>
+				
+				<table border="0">
+					<tr valign="top">
+						<td>
+							<div style="background-image: url(#{app.getCourseAvatar(course.selected)});" class="avatar-medium" />
+						</td>
+						<td>
+							<h1> 
+								<span style="margin-right: 40px;"> #{course.selected.title} </span>
+								<p:link outcome="/professors/detail" rendered="#{not empty course.selected.authorId.name}"
+										value="[ #{course.selected.authorId.name} ]">
+										<f:param name="profId" value="#{course.selected.authorId.id}"/>
+								</p:link>
+							</h1>
+							<div class="course-features"> 
+								#{course.selected.disciplineId.name} <br/>
+								#{course.selected.tags} <br/>
+								#{course.selected.subTitle} </div>
+							<div> #{course.selected.description} </div>
+							<div>
+								<ezcomp:courseState course="#{course.selected}" hasDates="true">
+									<f:facet name="open">
+										<h:outputText rendered="#{ctx.inRole('*')}"
+											value="(#{course.selected.coursesStudentsCollection.size()} из #{course.selected.studentsLimit})"/>
+									</f:facet>
+								</ezcomp:courseState>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				<p:link outcome="edit" rendered="#{course.canEdit()}" value="Редактировать курс">
+					<f:param name="courseId" value="#{course.selected.id}"/>
+				</p:link>
+
+				<p:outputPanel id="enroll-panel" rendered="#{course.canEnroll()}">
+				
+					<h:form>
+						
+						<p:commandButton value="Записаться на курс" onclick="PF('dlg1').show();"/>
+						
+						<p:dialog id="quest" closable="true" header="Анкета курса" dynamic="true" modal="true">
+							<p:panel header="#{course.questTitle}">
+								<h:outputText value="#{course.answer.question.body}"/>
+								<br/>
+								<p:selectOneRadio required="true" layout="pageDirection"
+												  value="#{course.answer.answer}">
+									<f:selectItem itemLabel="A: #{course.answer.question.answer1}"
+												  itemValue="#{course.answer.question.answer1}"
+												  rendered="#{not empty course.answer.question.answer1}" />
+									<f:selectItem itemLabel="B: #{course.answer.question.answer2}"
+												  itemValue="#{course.answer.question.answer2}"
+												  rendered="#{not empty course.answer.question.answer2}" />
+									<f:selectItem itemLabel="C: #{course.answer.question.answer3}"
+												  itemValue="#{course.answer.question.answer3}"
+												  rendered="#{not empty course.answer.question.answer3}" />
+									<f:selectItem itemLabel="D: #{course.answer.question.answer4}"
+												  itemValue="#{course.answer.question.answer4}"
+												  rendered="#{not empty course.answer.question.answer4}" />
+									<f:selectItem itemLabel="Другое"
+												  itemValue="#{course.answer.question.answer1}"
+												  rendered="#{not empty course.answer.question.answer1}" />
+								</p:selectOneRadio>
+							</p:panel>
+						</p:dialog>
+						
+					</h:form>
+					
+				</p:outputPanel>
+
+				<p:panel rendered="#{ctx.inRole('teacher,admin') or ctx.isCourseOfUser(course.selected)}" 
+						 id="course-topics">
+					
+					<ezcomp:topics proc="#{course.topProc}"/>
+					
+				</p:panel>
+				
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

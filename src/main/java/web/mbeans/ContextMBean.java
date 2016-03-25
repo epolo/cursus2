@@ -14,10 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,10 +39,25 @@ public class ContextMBean implements Serializable {
 	private String userName;
 	private Users user;
 	private List<Courses> myCourses;
+	private String extCookie;
+	static final String EXTSESSION_COOKIE = "EXTSESSION";
 
 	public ContextMBean() {
 	}
-
+/*
+	@PreDestroy
+	void destroy() {
+		if (extCookie != null) {
+			app.getExtUsersMap().remove(extCookie);
+			
+			HashMap<String, Object> props = new HashMap<>();
+			props.put("path", "/");
+			props.put("maxAge", new Integer(0));
+			FacesContext.getCurrentInstance().getExternalContext()
+					.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+		}
+	}
+*/	
 	public void setApp(AppMBean app) {
 		this.app = app;
 	}
@@ -62,6 +82,15 @@ public class ContextMBean implements Serializable {
 	public void setUser(Users user) {
 		this.user = user;
 		userName = user == null? null: user.getName();
+		if (extCookie == null) {
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			extCookie = "EXT-" + ec.getSessionId(true);
+			HashMap<String, Object> props = new HashMap<>();
+			props.put("path", "/");
+			ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+		}
+		Integer id = user == null? null: user.getPhpId();
+		app.getExtUsersMap().put(extCookie, id);
 	}
 
 	public List<Courses> getMyCourses() {

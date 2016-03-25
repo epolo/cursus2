@@ -4,3 +4,4 @@
 /target/
 /deploy/tomcat/logs/**
 /deploy/tomcat/work
+/deploy/tomcat/temp/**

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -27,6 +28,8 @@ public class AppMBean {
 	static final String DEFAULT_PROPS_FILE = "etc/server.properties";
 	static final String[] dirs = { "courses", "professors", "forum" };
 	
+	private final HashMap<String, Integer> extUsersMap = new HashMap<>();
+
 	@ManagedProperty("#{msg}")
 	private ResourceBundle msg;
 	private Properties props;
@@ -105,5 +108,9 @@ public class AppMBean {
 	public String getCourseAvatar(Courses c) {
 		String a = c.getCoverUrl();
 		return (a == null || a.isEmpty()? DEFAULT_COURSE_AVATAR: a);
+	}
+
+	public HashMap<String, Integer> getExtUsersMap() {
+		return extUsersMap;
 	}
 }

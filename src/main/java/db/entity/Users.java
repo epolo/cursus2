@@ -71,6 +71,8 @@ public class Users implements Serializable {
 	private Date updatedAt;
 	@Column(name = "old_id")
 	private Integer oldId;
+	@Column(name = "php_id")
+	private Integer phpId;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "studentId")
 	private Collection<CoursesStudents> coursesStudentsCollection;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
@@ -181,6 +183,14 @@ public class Users implements Serializable {
 
 	public void setOldId(Integer oldId) {
 		this.oldId = oldId;
+	}
+
+	public Integer getPhpId() {
+		return phpId;
+	}
+
+	public void setPhpId(Integer phpId) {
+		this.phpId = phpId;
 	}
 
 	public Collection<CoursesStudents> getCoursesStudentsCollection() {

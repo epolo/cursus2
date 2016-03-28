@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/main.xhtml">
+
+            <ui:define name="title">
+                Курсы
+            </ui:define>
+
+            <ui:define name="content">
+				
+				<h:outputStylesheet name="css/content.css"/>
+
+					<h:form>
+						Показывать завершённые
+						<p:selectBooleanCheckbox value="#{course.showPast}">
+							<p:ajax update="coursesList" listener="#{course.update}"/>
+						</p:selectBooleanCheckbox>
+						
+						<h:dataTable id="coursesList" value="#{course.coursesLst}" var="c" cellpadding="10">
+							
+							<p:column style="width: 80px;">
+								<div style="background-image: url(#{app.getCourseAvatar(c)})" class="avatar-small" />
+							</p:column>
+							
+							<p:column>
+
+								<p:link outcome="detail" value="#{c.title}">
+									<f:param name="courseId" value="#{c.id}"/>
+								</p:link>
+								
+									<p:link outcome="/professors/detail" rendered="#{not empty(c.authorId.name)}"
+											style="padding-left: 30px;"
+											value="[#{c.authorId.name}]">
+										<f:param name="profId" value="#{c.authorId.id}"/>
+									</p:link>
+									<br/>
+									<h:outputText value="#{c.tags}"/>
+									<br/>
+									<h:outputText value="#{c.subTitle}"/>
+									<ezcomp:courseState_1 course="#{c}"/>
+<ui:remove>
+										<p:outputPanel rendered="#{c.open}" style="background-color: lightblue;">
+											<span class="cursus-icon icon-status icon-status-open"/>
+											<span class="status-open"> Идёт набор </span>
+											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
+														   class="but-icon icon-action-circle" title="Курс в списке"/>
+										</p:outputPanel>
+										<p:outputPanel rendered="#{c.started}" style="background-color: #F0D0D0;">
+											<span class="cursus-icon icon-status icon-status-begin"/>
+											<span class="status-begin"> Идёт обучение </span>
+											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
+														   class="but-icon icon-action-circle" title="Курс в списке"/>
+										</p:outputPanel>
+										<p:outputPanel rendered="#{c.finished}" style="background-color: lightgray;">
+											<span class="cursus-icon icon-status icon-status-close"/>
+											<span class="status-close"> Курс завершён </span>
+											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
+														   class="but-icon icon-action-circle" title="Курс в списке"/>
+										</p:outputPanel>
+</ui:remove>									
+							</p:column>
+
+						</h:dataTable>
+					</h:form>
+				
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

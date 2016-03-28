@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/main.xhtml">
+
+            <ui:define name="title">
+                #{courseEdit.newCourse? 'Создание курса': 'Редактирование курса'}
+            </ui:define>
+
+            <ui:define name="content">
+
+				<h:outputStylesheet name="css/content.css"/>
+				<h:outputStylesheet name="css/upload.css"/>
+				
+				<p:messages id="msgs"/>
+
+				<h1> 
+					<h:outputText value="#{courseEdit.newCourse? 'Создание курса': 'Редактирование курса'}"/>
+				</h1>
+				
+				<h:form>
+					
+					<div align="center"><table border="0">
+						<tr align="top">
+							<td width="125px">
+								<p:graphicImage id="avatar" class="img avatar-medium" value="#{courseEdit.course.coverUrl}"/>
+								<br/>
+								<p:fileUpload fileUploadListener="#{courseEdit.uploadListener}" 
+								  label="Фото"
+								  update="avatar msgs"
+								  process="@this"
+								  auto="true"
+								  accept="image/*"
+								  previewWidth="0"
+								  />
+							</td>
+							<td>
+								<p:inputText value="#{courseEdit.course.title}" required="true" 
+											 requiredMessage="Название курса должно быть заполнено"
+											 title="Название курса" placeholder="Название курса"/>
+								<br/><p:inputText value="#{courseEdit.course.subTitle}"
+												  placeholder="Короткое описание курса" title="Короткое описание курса"/>
+								<br/><p:selectOneMenu value="#{courseEdit.course.disciplineId}" converter="discipline">
+									<f:selectItems value="#{db.discList}" var="d" itemLabel="#{d.name}" itemValue="#{d}"/>
+								</p:selectOneMenu>
+								<br/><p:inputText value="#{courseEdit.course.tags}"
+												  title="Для какого класса, уровня, возраста предназначен этот курс."
+												  placeholder="Для какого класса, уровня, возраста предназначен этот курс."/>
+								<br/><p:calendar value="#{courseEdit.course.startsAt}" placeholder="Дата начала"
+												 required="true" requiredMessage="Дата начала должна быть указана"
+												 locale="ru" navigator="true" pattern="dd-MM-yyyy" title="Дата начала"/>
+								&nbsp;-&nbsp;<p:calendar value="#{courseEdit.course.endsAt}" placeholder="Дата окончания"
+												 required="true" requiredMessage="Дата окончания должна быть указана"
+												 locale="ru" navigator="true" pattern="dd-MM-yyyy" title="Дата окончания"/>
+								<br/><p:inputText value="#{courseEdit.course.price}" placeholder="Стоимость курса" title="Стоимость курса"/>
+								<br/><p:inputText value="#{courseEdit.course.studentsLimit}" placeholder="Количество студентов" 
+												  title="Количество студентов" validatorMessage="Количесто студентов должно быть не меньше 1">
+									<f:validateLongRange minimum="1"/>
+								</p:inputText>
+								<br/><p:editor value="#{courseEdit.course.description}" width="600"/>
+							</td>
+						</tr>
+						<tr align="top">
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<h3> Анкета для записи на курс </h3>
+							</td>
+						</tr>
+						<tr align="top">
+							<td>
+								&nbsp;
+							</td>
+							<td>
+								<p:dataTable id="quiz" value="#{courseEdit.quest}" var="q" rowIndexVar="i"
+											 emptyMessage="Добавьте вопрос в анкету">
+									<p:column>
+										<p:inputTextarea value="#{q.body}" autoResize="false" placeholder="Текст вопроса №#{i + 1}"/>
+										<br/><p:inputText value="#{q.answer1}" placeholder="Ответ A"/>
+										<br/><p:inputText value="#{q.answer2}" placeholder="Ответ B"/>
+										<br/><p:inputText value="#{q.answer3}" placeholder="Ответ C"/>
+										<br/><p:inputText value="#{q.answer4}" placeholder="Ответ D"/>
+									</p:column>
+									<p:column width="32">
+										<p:commandButton actionListener="#{courseEdit.delQuest(i)}" title="Удалить вопрос" icon="ui-icon-minusthick" update="quiz msgs"/>
+										<f:facet name="footer">
+											<p:commandButton actionListener="#{courseEdit.addQuest}" title="Добавить вопрос" icon="ui-icon-plusthick" update="quiz msgs"/>
+										</f:facet>
+									</p:column>
+								</p:dataTable>
+							</td>
+						</tr>
+					</table>
+					
+						<p:commandButton value="#{courseEdit.newCourse? 'Создать курс': 'Сохранить изменения'}" actionListener="#{courseEdit.update}"
+										 process="@form" update="@form msgs"/>
+										 
+					</div>
+
+					
+				</h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

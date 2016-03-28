@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch Beta 3.4 (14809) - http://www.bohemiancoding.com/sketch -->
+    <title>Rectangle 25 + Imported Layers</title>
+    <desc>Created with Sketch Beta.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="60" height="60"></rect>
+    </defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Найти" sketch:type="MSArtboardGroup" transform="translate(-570.000000, -240.000000)">
+            <g id="Avatar-box-+-$title-+-Rectangle-20" sketch:type="MSLayerGroup" transform="translate(570.000000, 240.000000)">
+                <g id="Avatar-box">
+                    <g id="Rectangle-25-+-Imported-Layers">
+                        <mask id="mask-2" sketch:name="Mask" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" opacity="0.5" fill="#5879CC" sketch:type="MSShapeGroup" xlink:href="#path-1"></use>
+                        <path d="M45.0425816,49.3349722 C38.1692513,46.8407546 35.9721945,44.7368832 35.9721945,40.2315223 C35.9721945,37.5274173 38.0711086,38.410277 38.9928687,33.4579336 C39.3748443,31.4029249 41.2284019,33.4246182 41.5836113,28.7343564 C41.5836113,26.8648038 40.5715153,26.4006083 40.5715153,26.4006083 C40.5715153,26.4006083 41.0856489,23.6343145 41.2875105,21.5054565 C41.5367705,18.8529905 39.7484555,12 30.2085451,12 C20.6691923,12 18.8797621,18.8529905 19.1301373,21.5054565 C19.3319989,23.6343145 19.8461325,26.4006083 19.8461325,26.4006083 C19.8461325,26.4006083 18.8340365,26.8648038 18.8340365,28.7343564 C19.1881307,33.4246182 21.0416882,31.4029249 21.4242215,33.4579336 C22.3465392,38.410277 24.4443381,37.5274173 24.4443381,40.2315223 C24.4443381,44.7368832 22.2483966,46.8407546 15.3750662,49.3349722 C8.47998832,51.8369634 4,54.3878172 4,56.1274396 L4,61.9731926 L56.4176478,61.9731926 L56.4176478,56.1274396 C56.4176478,54.3878172 51.9376595,51.8369634 45.0425816,49.3349722" id="Imported-Layers" fill="#FCFCFC" sketch:type="MSShapeGroup" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

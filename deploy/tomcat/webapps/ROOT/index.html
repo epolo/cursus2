@@ -1,0 +1,86 @@
+<html>
+<head>
+	<title>Welcome server</title>
+
+	<STYLE>
+h2 {
+	color: green;
+}
+.ico {
+	width: 14px;
+    height: 14px;
+    display: block;
+    // position: absolute;
+    // right: 0;
+    // top: 50%;
+    // margin-top: -7px;
+    // background: url("images/checkbox.svg") -15px -8px no-repeat;
+	background: url("images/checkbox.svg");
+	// background-position: -44px -8px;
+    // cursor: pointer;
+}
+
+.ico.icon1 {
+	background-position: -15px -8px;
+}
+.ico.icon2 {
+	background-position: -44px -8px;
+}
+.ico.icon3 {
+	background-position: -73px -8px;
+}
+.txt {
+	margin-left: 40px;
+}
+
+.but-icon {
+	width: 24px;
+    height: 24px;
+    display: block;
+  background-image: url("images/button-icons.svg");
+  margin-right: 3px; }
+.but-icon.icon-action-circle {
+    background-position: -14px -14px; }
+.but-icon.icon-add {
+    background-position: -49px -14px; }
+.but-icon.icon-action {
+    background-position: -84px -14px; }
+.but-icon.icon-cross {
+    background-position: -114px -14px; }
+.but-icon.icon-arrow-left {
+    background-position: -9px -45px; }
+.but-icon.icon-arrow-right {
+    background-position: -42px -45px; }
+
+	</STYLE>
+</head>
+<body>
+  <h2>Base #0</h2>
+
+  <p>Icons:</p>
+  <p>
+	<span class='ico icon1'/> <span class='txt'>Icon1</span>
+	<br>
+	<span class='ico icon2'/> <span class='txt'>Icon2</span>
+	<br>
+	<span class='ico icon3'/> <span class='txt'>Icon3</span>
+  </p>
+
+  <hr style='margin-top: 50px;'>
+
+
+  <p>
+	Icons #2 from 'button-icons.svg'
+  </p>
+
+  <!-- table style='width: 80%; background-color: navy; color: white;' -->
+  <table style='width: 80%;'>
+	<tr><td> <span class='but-icon icon-action-circle' style='background-color: green;'/> </td><td>  action-circle </td></tr>
+	<tr><td> <span style='background-color: blue;' class='but-icon icon-add'/> </td><td> add </td></tr>
+	<tr><td> <span style='background-color: gray;' class='but-icon icon-action'/> </td><td> action </td></tr>
+	<tr><td> <span style='background-color: gray;' class='but-icon icon-cross'/> </td><td> cross </td></tr>
+	<tr><td> <span style='background-color: gray;' class='but-icon icon-arrow-left'/> </td><td> arrow-left </td></tr>
+	<tr><td> <span style='background-color: gray;' class='but-icon icon-arrow-right'/> </td><td> arrow-right </td></tr>
+  </table>
+</body>
+</html>

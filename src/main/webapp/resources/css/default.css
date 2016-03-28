@@ -1,0 +1,60 @@
+/*
+@font-face {
+  font-family: "ProximaNovaRegular";
+  src: url("../fonts/ProximaNovaRegular/ProximaNovaRegular.eot");
+  src: url("../fonts/ProximaNovaRegular/ProximaNovaRegular.eot?#iefix") format("embedded-opentype"), url("../fonts/ProximaNovaRegular/ProximaNovaRegular.woff") format("woff"), url("../fonts/ProximaNovaRegular/ProximaNovaRegular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal; }
+
+// font-family: "ProximaNovaBold"; 
+@font-face {
+  font-family: "ProximaNovaBold";
+  src: url("../fonts/ProximaNovaBold/ProximaNovaBold.eot");
+  src: url("../fonts/ProximaNovaBold/ProximaNovaBold.eot?#iefix") format("embedded-opentype"), url("../fonts/ProximaNovaBold/ProximaNovaBold.woff") format("woff"), url("../fonts/ProximaNovaBold/ProximaNovaBold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal; }
+
+//  font-family: "ProximaNovaBlack"; 
+@font-face {
+  font-family: "ProximaNovaBlack";
+  src: url("../fonts/ProximaNovaBlack/ProximaNovaBlack.eot");
+  src: url("../fonts/ProximaNovaBlack/ProximaNovaBlack.eot?#iefix") format("embedded-opentype"), url("../fonts/ProximaNovaBlack/ProximaNovaBlack.woff") format("woff"), url("../fonts/ProximaNovaBlack/ProximaNovaBlack.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal; }
+*/
+
+body {
+/*
+    background-color: #ffffff;
+    font-size: 12px;
+    font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+*/
+  background: #eee;
+  color: #44464E;
+  font: 16px/1.6 "ProximaNovaRegular", Helvetica, arial, sans-serif;
+
+    margin: 10px;
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 1px solid #AFAFAF; 
+    font-size:  16px;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    color: #D20005;
+}
+
+a:link, a:visited {
+  color: #045491;
+  /* font-weight : bold; */
+  text-decoration: none;
+}
+
+a:link:hover, a:visited:hover  {
+  color: #045491;
+  /* font-weight : bold; */
+  text-decoration : underline;
+}

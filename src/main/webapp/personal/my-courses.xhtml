@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/main.xhtml">
+
+			<f:metadata>
+				<f:viewAction action="#{ctx.checkUserRole('*')}" immediate="true" />
+			</f:metadata>
+			
+            <ui:define name="title">
+                Мои курсы
+            </ui:define>
+			
+            <ui:define name="content">
+			
+				<h:outputStylesheet name="css/content.css"/>
+					
+				<h:form>
+
+					<h1> Мои курсы </h1>
+
+					<p:messages id="msgs"/>
+					
+					<p:outputPanel rendered="#{ctx.inRole('teacher,admin')}" id="panel_1">
+						
+						<p:dataList type="unordered" value="#{ctx.user.coursesCollection}" var="c"
+									emptyMessage="Вы пока не cоздали ни одного курса.">
+							<p:link outcome="/courses/detail" value="#{c.title}">
+								<f:param name="courseId" value="#{c.id}"/>
+							</p:link>
+							<ezcomp:courseState course="#{c}" hasDates="true">
+								<f:facet name="open">
+									<span>(Some facet text)</span>
+								</f:facet>
+							</ezcomp:courseState>
+						</p:dataList>
+
+						<p:link outcome="/courses/edit" value="Создать курс"/>
+						
+					</p:outputPanel>
+					
+					<p:outputPanel rendered="#{ctx.inRole('student') or not empty ctx.myCourses}" id="panel_2">
+						<p:dataList type="unordered" value="#{ctx.myCourses}" var="c"
+									emptyMessage="Вы пока не записались ни на один курс.">
+							<p:link outcome="/courses/detail" value="#{c.title}">
+								<f:param name="courseId" value="#{c.id}"/>
+							</p:link>
+							<ezcomp:courseState course="#{c}" hasDates="true"/>
+						</p:dataList>
+					</p:outputPanel>
+
+				</h:form>
+				
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

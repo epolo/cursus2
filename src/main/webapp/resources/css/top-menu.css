@@ -1,0 +1,121 @@
+.top-menu-active {
+    border-bottom: 3px solid #D20005; 
+    /* color: #D20005 !important; */
+}
+
+.top-menu-normal {
+}
+
+#logo {
+	display: block;
+	margin-top: 20px;
+	padding: 0 20px;
+	width: 100%;
+	height: 43px;
+	background: url("/images/logo.svg") 20px no-repeat; }
+
+.cursus-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 4px;
+  margin-left: 20px;
+  background: url("/images/icons.svg") 0 0 no-repeat; }
+
+.cursus-icon.icon-my-cub {
+    background-position: -48px -15px; }
+
+.cursus-icon.icon-my-courses {
+    background-position: -15px -15px; }
+
+.cursus-icon.icon-search {
+    background-position: -83px -15px; }
+
+.cursus-icon.icon-forum {
+    background-position: -185px -15px; }
+
+.cursus-icon.icon-ads {
+    background-position: -220px -15px; }
+
+.cursus-icon.icon-media {
+    background-position: -252px -15px; }
+
+.cursus-icon.icon-conferences {
+    background-position: -285px -15px; }
+
+.cursus-icon.icon-pen {
+    background-position: -152px -15px; }
+
+.cursus-icon.icon-send {
+    background-position: -116px -15px; }
+
+.cursus-icon.icon-calendar {
+    background-position: -115px -48px; }
+
+.cursus-icon.icon-message-action {
+    width: 12px;
+    height: 12px;
+    top: 0px;
+    margin-right: 5px; }
+
+.cursus-icon.icon-add-image {
+    background-position: -15px -114px; }
+
+.cursus-icon.icon-add-document {
+    background-position: -48px -114px; }
+
+.cursus-icon.icon-add-hangouts {
+    background-position: -81px -114px;
+    height: 14px;
+    top: 1px; }
+
+.cursus-icon.icon-comments {
+    width: 14px;
+    height: 14px;
+    top: 3px;
+    margin-right: 5px;
+    background-position: -113px -114px; }
+
+.cursus-icon.icon-status-large.icon-status-open {
+    background-position: -15px -48px; }
+
+.cursus-icon.icon-status-large.icon-status-begin {
+    background-position: -48px -48px; }
+
+.cursus-icon.icon-status-large.icon-status-close {
+    background-position: -81px -48px; }
+
+.cursus-icon.icon-status {
+    width: 16px;
+    height: 16px;
+    top: 3px; }
+
+.cursus-icon.icon-status.icon-status-open {
+      background-position: -15px -83px; }
+
+.cursus-icon.icon-status.icon-status-begin {
+      background-position: -48px -83px; }
+
+.cursus-icon.icon-status.icon-status-close {
+      background-position: -81px -83px; }
+
+.but-icon {
+	width: 24px;
+    height: 24px;
+	display: inline-block;
+	position: relative;
+	margin-left: 30px;
+	background-image: url("/images/button-icons.svg"); }
+.but-icon.icon-action-circle {
+    background-position: -14px -14px; }
+.but-icon.icon-add {
+    background-position: -49px -14px; }
+.but-icon.icon-action {
+    background-position: -84px -14px; }
+.but-icon.icon-cross {
+    background-position: -114px -14px; }
+.but-icon.icon-arrow-left {
+    background-position: -9px -45px; }
+.but-icon.icon-arrow-right {
+    background-position: -42px -45px; }

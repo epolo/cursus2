@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+	<f:view>
+
+		<ui:insert name="metadata"/>
+		
+	<h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="css/default.css"/>
+        <h:outputStylesheet name="css/cssLayout.css"/>
+        <title><ui:insert name="title">ExProfesso</ui:insert></title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top" class="top">
+            <ui:insert name="top">
+		
+				<h:outputStylesheet name="css/top-menu.css"/>
+
+				<table width="90%">
+					<tr>
+						<td style="width: 230px;">
+							<a href="#{request.contextPath}">
+								<span id="logo"></span>
+							</a>
+						</td>
+						<td style="vertical-align: bottom;">
+		
+							<c:forEach items="#{app.dirs}" var="d">
+								<ezcomp:topMenuItem value="#{d}"/>
+							</c:forEach>
+
+						</td>
+						<td style="vertical-align: bottom; text-align: right">
+							
+							<h:form>
+								
+							<p:outputPanel rendered="#{!ctx.auth}">
+								<p:link outcome="/users" value="Google+ ..." 
+										title="Авторизоваться через сервис Google+"/>
+								<p:commandLink value="?" onclick="PF('gglHelp').show();"
+											   style="background: #ece3a5; border: 1px solid;"/>
+								<p:dialog widgetVar="gglHelp" closable="true" closeOnEscape="true" 
+										  width="500px" showHeader="false" position="top" 
+										  style="background: #ece3a5; border: 1px solid; text-align: right;">
+									<p:panel header="Авторизация через сервис Google+">
+									<p>
+										Для авторизации необходимо иметь действующую учётную запись Google+ 
+										(она же учётная запись почтовой службы GMail).
+									</p>
+									<p>
+										В процессе авторизации Вам может быть предложено войти в свою учётную запись 
+										на сервере Google, после чего из Google будет передана только базовая информация:
+										Ваше имя в системе Google и адрес электронной почты.
+										<br/>
+										Перед передачей этой информации в первый раз система Google запросит Ваше согласие. 
+									</p>
+									</p:panel>
+								</p:dialog>
+							</p:outputPanel>
+							
+							<p:outputPanel rendered="#{ctx.auth}">
+								<p:commandLink id="userCmd" value="#{ctx.userName}"/>
+								<p:menu overlay="true" trigger="userCmd" my="left top" at="left bottom">
+									<p:menuitem rendered="#{ctx.inRole('*')}" value="Профиль" ajax="false" outcome="/personal/index"/>
+									<p:menuitem rendered="#{ctx.inRole('*')}" value="Мои курсы" ajax="false" outcome="/personal/my-courses"/>
+									<p:menuitem rendered="#{!ctx.inRole('*')}" value="Приглашение" ajax="false" outcome="/invitation"/>
+									<p:menuitem value="Выход" ajax="false" action="#{req.logout()}"/>
+								</p:menu>
+							</p:outputPanel>
+							
+							</h:form>
+						</td>
+							
+					</tr>
+				</table>
+				<hr/>
+			</ui:insert>
+        </div>
+
+        <div id="content" class="center_content">
+            <ui:insert name="content">Content
+			
+				<div>
+					Icons:
+					<br/>
+					
+				|
+				<span class="cursus-icon icon-my-cub"/>
+				|
+				<span class="cursus-icon icon-my-courses"/>
+				|
+				<span class="cursus-icon icon-search"/>
+				|
+				<span class="cursus-icon icon-forum"/>
+				|
+				<span class="cursus-icon icon-ads"/>
+				|
+				<span class="cursus-icon icon-media"/>
+				|
+				<span class="cursus-icon icon-conferences"/>
+				|
+				<span class="cursus-icon icon-pen"/>
+				|
+				<span class="cursus-icon icon-send"/>
+				|
+				<span class="cursus-icon icon-calendar"/>
+				|
+				<span class="cursus-icon icon-message-action"/>
+				|
+				<span class="cursus-icon icon-add-image"/>
+				|
+				<span class="cursus-icon icon-add-document"/>
+				|
+				<span class="cursus-icon icon-add-hangouts"/>
+				|
+				<span class="cursus-icon icon-comments"/>
+				|
+				<span class="cursus-icon icon-status"/>
+
+				</div>
+			</ui:insert>
+        </div>
+
+    </h:body>
+	</f:view>
+</html>

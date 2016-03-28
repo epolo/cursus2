@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="12px" height="20px" viewBox="0 0 12 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch Beta 3.4 (14672) - http://www.bohemiancoding.com/sketch -->
+    <title>Imported Layers</title>
+    <desc>Created with Sketch Beta.</desc>
+    <defs></defs>
+    <g id="Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Состояния" sketch:type="MSArtboardGroup" transform="translate(-895.000000, -246.000000)" fill="#5879CC">
+            <g id="Пикер-даты" sketch:type="MSLayerGroup" transform="translate(637.000000, 116.000000)">
+                <g id="Input" transform="translate(0.000000, 44.000000)" sketch:type="MSShapeGroup">
+                    <g id="Arrow" transform="translate(245.000000, 6.000000)">
+                        <path d="M24.536864,97.4323215 C25.1543787,98.0201635 25.1543787,98.9719285 24.536864,99.5597706 C23.9193493,100.146308 22.9187724,100.147178 22.3003346,99.5597706 L13.463136,91.0643224 C12.8456213,90.4764803 12.8456213,89.5238457 13.463136,88.9360037 L22.3003346,80.4405554 C22.9187724,79.8531482 23.9184262,79.8531482 24.536864,80.4405554 C25.1543787,81.0283975 25.1543787,81.9801625 24.536864,82.5680046 L17.2896042,89.9999456 L24.536864,97.4323215" id="Imported-Layers" transform="translate(19.000000, 90.000000) rotate(-180.000000) translate(-19.000000, -90.000000) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -2,7 +2,7 @@
 /dist/
 /nbproject/private/
 /target/
-/smf/
+/backups/
 /deploy/tomcat/logs/**
 /deploy/tomcat/work
 /deploy/tomcat/temp/**

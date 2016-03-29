@@ -9,8 +9,8 @@ function integrate_exprofesso_user() {
 
 		// '2';
 
-	print ' -- called integrate_exprofesso_user() -- ' . $ret;
-	print_r($_COOKIE);
+	// print ' -- called integrate_exprofesso_user() -- ' . $ret;
+	// print_r($_COOKIE);
 
 	return $ret;
 }

@@ -44,20 +44,21 @@ public class ContextMBean implements Serializable {
 
 	public ContextMBean() {
 	}
-/*
+
 	@PreDestroy
 	void destroy() {
 		if (extCookie != null) {
 			app.getExtUsersMap().remove(extCookie);
-			
+/*			
 			HashMap<String, Object> props = new HashMap<>();
 			props.put("path", "/");
 			props.put("maxAge", new Integer(0));
 			FacesContext.getCurrentInstance().getExternalContext()
 					.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+*/
 		}
 	}
-*/	
+	
 	public void setApp(AppMBean app) {
 		this.app = app;
 	}

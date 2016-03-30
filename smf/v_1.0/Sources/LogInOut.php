@@ -10,27 +10,22 @@ if (!defined('SMF'))
 
 function Login()
 {
-	sendRedirToCursus2();
+	sendRedirToCursus();
 }
 
 function Login2()
 {
-	sendRedirToCursus2();
+	sendRedirToCursus();
 }
 
 function checkActivation()
 {
-	sendRedirToCursus2();
+	sendRedirToCursus();
 }
 
 function Logout($internal = false, $redirect = true)
 {
-	sendRedirToCursus2();
-}
-
-function sendRedirToCursus2() {
-	header('Location: /cursus2/');
-	// exit;
+	sendRedirToCursus();
 }
 
 ?>

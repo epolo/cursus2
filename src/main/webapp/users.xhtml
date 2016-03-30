@@ -26,6 +26,11 @@
 								   style="font-weight: bold;" rendered="#{ctx.auth}"/>
 					<p:commandButton value="Logout" actionListener="#{req.logout()}" 
 									 process="@this" update="@form" style="margin-left: 40px;"/> 
+					
+					<p:selectBooleanCheckbox rendered="#{ctx.inRole('admin')}" itemLabel="Log as forum admin" value="#{ctx.forumAdmin}">
+						<p:ajax update="msgs" listener="#{ctx.changeForumAdmin}" process="@this" />
+					</p:selectBooleanCheckbox>
+					
 				</p:outputPanel>
 				
 				<p:outputLabel value="User NOT logged" 

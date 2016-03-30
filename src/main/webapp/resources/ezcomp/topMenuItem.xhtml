@@ -13,7 +13,7 @@
 	<!-- IMPLEMENTATION -->
 	<cc:implementation>
 
-		<p:link outcome="/#{cc.attrs.value}/index.jsf"
+		<p:link outcome="/#{cc.attrs.value}/index"
 				class="#{req.isCurDir(cc.attrs.value)? 'top-menu-active' : 'top-menu-normal'}">
 			<span class="cursus-icon #{msg['topMenu.'.concat(cc.attrs.value).concat('.icon')]}"/>
 			<h:outputText value="#{msg['topMenu.'.concat(cc.attrs.value).concat('.label')]}"/>

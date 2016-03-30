@@ -3,9 +3,11 @@
   <Resource name="jdbc/cursus" auth="Container" type="javax.sql.DataSource"
                username="tomcat" password="tomcat" driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/cursus2?zeroDateTimeBehavior=convertToNull"/>
-<!-- maxTotal="100" maxIdle="30" maxWaitMillis="10000" -->
-    <!-- Switch off session serialization -->
+  <Resource name="jdbc/forum" auth="Container" type="javax.sql.DataSource"
+               username="tomcat" password="tomcat" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/smf?zeroDateTimeBehavior=convertToNull"/>
 
+    <!-- Switch off session serialization -->
     <Manager className="org.apache.catalina.session.PersistentManager" debug="0" distributable="false"
              saveOnRestart="false">
         <Store className="org.apache.catalina.session.FileStore"/>

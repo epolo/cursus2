@@ -24,9 +24,4 @@ function Activate()
 	sendRedirToCursus();
 }
 
-function sendRedirToCursus() {
-	header('Location: /cursus2/');
-	// exit;
-}
-
 ?>

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -40,6 +41,7 @@ public class ContextMBean implements Serializable {
 	private Users user;
 	private List<Courses> myCourses;
 	private String extCookie;
+	private boolean forumAdmin;
 	static final String EXTSESSION_COOKIE = "EXTSESSION";
 
 	public ContextMBean() {
@@ -47,16 +49,7 @@ public class ContextMBean implements Serializable {
 
 	@PreDestroy
 	void destroy() {
-		if (extCookie != null) {
-			app.getExtUsersMap().remove(extCookie);
-/*			
-			HashMap<String, Object> props = new HashMap<>();
-			props.put("path", "/");
-			props.put("maxAge", new Integer(0));
-			FacesContext.getCurrentInstance().getExternalContext()
-					.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
-*/
-		}
+		setUser(null);
 	}
 	
 	public void setApp(AppMBean app) {
@@ -82,16 +75,23 @@ public class ContextMBean implements Serializable {
 
 	public void setUser(Users user) {
 		this.user = user;
-		userName = user == null? null: user.getName();
-		if (extCookie == null) {
-			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			extCookie = "EXT-" + ec.getSessionId(true);
-			HashMap<String, Object> props = new HashMap<>();
-			props.put("path", "/");
-			ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+		if (user == null) {
+			userName = null;
+			if (extCookie != null) {
+				app.getExtUsersMap().remove(extCookie);
+				extCookie = null;
+			}
+		} else {
+			if (extCookie == null) {
+				ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+				extCookie = "EXT-" + ec.getSessionId(true);
+				HashMap<String, Object> props = new HashMap<>();
+				props.put("path", "/");
+				ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+			}
+			app.getExtUsersMap().put(extCookie, user.getPhpId());
+			userName = user.getName();
 		}
-		Integer id = user == null? null: user.getPhpId();
-		app.getExtUsersMap().put(extCookie, id);
 	}
 
 	public List<Courses> getMyCourses() {
@@ -105,7 +105,15 @@ public class ContextMBean implements Serializable {
 	public boolean isAuth() {
 		return userName != null;
 	}
-	
+
+	public boolean isForumAdmin() {
+		return forumAdmin;
+	}
+
+	public void setForumAdmin(boolean forumAdmin) {
+		this.forumAdmin = forumAdmin;
+	}
+
 	/**
 	 * @param role - comma separated roles
 	 */
@@ -177,4 +185,10 @@ public class ContextMBean implements Serializable {
 		return res;
 	}
 
+	public void changeForumAdmin() {
+		if (inRole("admin")) {
+			app.getExtUsersMap().put(extCookie, forumAdmin? 1: user.getPhpId());
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Forum admin status: " + forumAdmin));
+		}
+	}
 }

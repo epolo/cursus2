@@ -39,15 +39,16 @@ public class CourseMBean implements Serializable {
 	
 	public CourseMBean() {
 	}
-
-	@PostConstruct
-	void init() {
-		String s = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("courseId");
-		if (s != null) try {
-			int id = Integer.parseInt(s);
-			selected = db.find(Courses.class, id);
-		} catch (Exception e) { e.printStackTrace(); }
+	
+	public Integer getSelectedId() {
+		return selected == null? null: selected.getId();
+	}
+	
+	public void setSelectedId(Integer id) {
+		selected = db.find(Courses.class, id);
+		if (selected == null) {
+			logger.warning("Cannot find course by id = " + id);
+		}
 	}
 
 	public void setDb(DbMBean db) {

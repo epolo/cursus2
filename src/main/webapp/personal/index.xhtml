@@ -10,9 +10,11 @@
 
         <ui:composition template="/WEB-INF/templates/main.xhtml">
 
-			<f:metadata>
-				<f:viewAction action="#{ctx.checkUserRole('*')}" immediate="true" />
-			</f:metadata>
+			<ui:define name="metadata">
+				<f:metadata>
+					<f:viewAction action="#{ctx.checkUserRole('*')}"/>
+				</f:metadata>
+			</ui:define>
 			
             <ui:define name="title">
                 Профиль участника ExProfesso

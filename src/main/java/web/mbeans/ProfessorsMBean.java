@@ -3,6 +3,8 @@ package web.mbeans;
 import db.entity.Users;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -14,6 +16,8 @@ import javax.faces.context.FacesContext;
 public class ProfessorsMBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	static final String PROFF_CONDITION = "o.id in (select c.authorId.id from Courses c)";
+	
 	@ManagedProperty(value = "#{db}")
 	private DbMBean db;
 	
@@ -23,26 +27,17 @@ public class ProfessorsMBean implements Serializable {
 	public ProfessorsMBean() {
 	}
 
-	@PostConstruct
-	void init() {
-		String s = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("profId");
-		if (s != null) try {
-			setSelectedId(Integer.parseInt(s));
-		} catch (Exception e) { e.printStackTrace(); }
-	}
-	
 	public void setDb(DbMBean db) {
 		this.db = db;
 	}
 
 	public List<Users> getProfList() {
 		if (profList == null) {
-			profList = db.select(Users.class, "SELECT o FROM Users o WHERE o.id in (select c.authorId.id from Courses c)");
+			profList = db.select(Users.class, "SELECT o FROM Users o WHERE " + PROFF_CONDITION);
 		}
 		return profList;
 	}
-
+	
 	public Users getSelected() {
 		return selected;
 	}
@@ -51,11 +46,17 @@ public class ProfessorsMBean implements Serializable {
 		this.selected = selected;
 	}
 	
-	public void setSelectedId(int id) {
-		if (id > 0)
-			selected = (Users) db.selectSingle(
-					"select o from Users o where o.id=?1 and o.id in (select c.authorId.id from Courses c)", 
-					id);
+	public void setSelectedId(Integer id) {
+		if (id > 0) try {
+			selected = (Users) db.selectSingle("select o from Users o where o.id=?1 and " + PROFF_CONDITION, id);
+		} catch (Exception ex) {
+			Logger.getLogger(ProfessorsMBean.class.getName())
+					.log(Level.SEVERE, "Cannot find professor by id = " + id, ex);
+		}
+	}
+
+	public Integer getSelectedId() {
+		return selected == null? null: selected.getId();
 	}
 	
 	public void update() {

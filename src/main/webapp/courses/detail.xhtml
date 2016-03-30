@@ -11,9 +11,12 @@
 
         <ui:composition template="/WEB-INF/templates/main.xhtml">
 
-			<f:metadata>
-				<f:viewAction action="#{ctx.checkNotNull(course.selected)}" immediate="true" />
-			</f:metadata>
+			<ui:define name="metadata">
+				<f:metadata>
+					<f:viewParam name="courseId" value="#{course.selectedId}"/>
+					<f:viewAction action="#{ctx.checkNotNull(course.selected)}"/>
+				</f:metadata>
+			</ui:define>
 			
             <ui:define name="title">
                 Описание курса

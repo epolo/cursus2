@@ -29,6 +29,18 @@
         <servlet-name>UserIdServlet</servlet-name>
         <servlet-class>web.UserIdServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GoogleAuthServlet</servlet-name>
+        <servlet-class>web.GoogleAuthServlet</servlet-class>
+        <init-param>
+            <param-name>login-path</param-name>
+            <param-value>/login</param-value>
+        </init-param>
+        <init-param>
+            <param-name>callback-path</param-name>
+            <param-value>/callback</param-value>
+        </init-param>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
@@ -37,6 +49,11 @@
     <servlet-mapping>
         <servlet-name>UserIdServlet</servlet-name>
         <url-pattern>/userid</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GoogleAuthServlet</servlet-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/callback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

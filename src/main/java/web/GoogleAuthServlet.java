@@ -1,5 +1,6 @@
 package web;
 
+import db.entity.Users;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,16 +14,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import web.mbeans.ContextMBean;
 
 public class GoogleAuthServlet extends HttpServlet {
 
+	static final String OAUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/";
+	static final String PROP_CLI_ID = "oauth2.cli.id";
+	static final String PROP_CLI_SECR = "oauth2.cli.secret";
+	static final String PROP_REDIR_URL = "oauth2.redir.url";
+
 	private final Logger logger = Logger.getLogger(GoogleAuthServlet.class.getName());
-	private String cliId;
-	private String cliSecret;
-	private String redirUrl;
 	private String loginPath;
 	private String callbackPath;
 	private String accessDeniedRedir;
+	private String welcomeRedir;
 
 	@Override
 	public void init() {
@@ -33,26 +38,31 @@ public class GoogleAuthServlet extends HttpServlet {
 		if (callbackPath == null)
 			callbackPath = "/callback";
 		accessDeniedRedir = getInitParameter("access-denied-redir");
-
-		Properties props = ((web.mbeans.AppMBean)getServletContext().getAttribute("app")).getGgleProps();
-		cliId = props.getProperty("oauth2.cli.id");
-		cliSecret = props.getProperty("oauth2.cli.secret");
-		redirUrl = props.getProperty("oauth2.redir.url");
+		welcomeRedir = getInitParameter("welcome-redir");
+		if (welcomeRedir == null)
+			welcomeRedir = "/welcome.jsf";
 	}
 
+	private Properties getProps() {
+		return ((web.mbeans.AppMBean)getServletContext().getAttribute("app")).getGgleProps();
+	}
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+	
 		String sp = request.getServletPath();
 		
 		// login stage 1 -- send redir to Google
 		if (loginPath.equals(sp)) {
-			response.sendRedirect(getRedirUrl());
+			String redir = request.getParameter("redir");
+			if (redir == null)
+				redir = welcomeRedir;
+			String url = getRedirUrl(redir);
+			response.sendRedirect(url);
 			return;
 		}
-		
+
 		if (!callbackPath.equals(sp)) {
 			throw new ServletException("Unrecognized servlet path: " + sp);
 		}
@@ -67,6 +77,7 @@ public class GoogleAuthServlet extends HttpServlet {
 			return;
 		}
 		
+		String state = request.getParameter("state");
 		String code = request.getParameter("code");
 		if (code == null) {
 			logger.severe("Bad response from Google OAuth2 server -- no 'code' parameter.");
@@ -75,8 +86,7 @@ public class GoogleAuthServlet extends HttpServlet {
 			return;
 		}
 
-		HttpURLConnection conn = (HttpURLConnection) new URL("https://accounts.google.com/o/oauth2/token")
-											.openConnection();
+		HttpURLConnection conn = (HttpURLConnection) new URL(OAUTH_ENDPOINT + "token").openConnection();
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
 		OutputStream os = conn.getOutputStream();
@@ -101,7 +111,7 @@ public class GoogleAuthServlet extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, msg);
 			return;
 		}
-		
+
 		p = processJson(new URL("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + t).openStream());
 		String id = p.getProperty("id");
 		String name = p.getProperty("name");
@@ -109,12 +119,32 @@ public class GoogleAuthServlet extends HttpServlet {
 		String lastName = p.getProperty("family_name");
 		String email = p.getProperty("email");
 
-		
+		Users u = new Users();
+		u.setEmail(email);
+		u.setGgleUid(id);
+		u.setName(name);
+		ContextMBean ctx = (ContextMBean) request.getSession().getAttribute("ctx");
+		ctx.updateExtCookie(request, response);
+
+		s = request.getContextPath();
+		boolean b = ctx.authorize(u);
+		if (b) {
+			int i = state.indexOf("cursus_redir:");
+			if (i >= 0) {
+				s += state.substring(i + "cursus_redir:".length());
+			}
+		} else {
+			s += "/invitation.jsf";
+		}
+		response.sendRedirect(s);
+
+/*		
 			response.setContentType("text/plain");
 			response.getWriter().println(" -- Response parsed: name = " + name + ", email = " + email 
 					+"\n All parsed data: " + p
+					+"\n state: " + state
 			);
-
+*/
 	}
 
 
@@ -140,17 +170,21 @@ public class GoogleAuthServlet extends HttpServlet {
 		return prop;
 	}
 
-	private String getRedirUrl() {
-		return "https://accounts.google.com/o/oauth2/auth?client_id=" + cliId
-				+ "&response_type=code&scope=profile+email&redirect_uri=" + redirUrl
-				+ "&state=retrieve-google-profile&access_type=online";
+	private String getRedirUrl(String cursus_redir) {
+		Properties p = getProps();
+		return OAUTH_ENDPOINT 
+				+ "auth?approval_prompt=force&access_type=online&response_type=code&scope=profile+email"
+				+ "&redirect_uri=" + p.getProperty(PROP_REDIR_URL)
+				+ "&client_id=" + p.getProperty(PROP_CLI_ID)
+				+ "&state=cursus_redir:" + cursus_redir;
 	}
 	
 	private String getPostData(String code) {
+		Properties p = getProps();
 		return "code=" + code
-			+ "&client_id=" + cliId
-			+ "&client_secret=" + cliSecret
-			+ "&redirect_uri=" + redirUrl
+			+ "&client_id=" + p.getProperty(PROP_CLI_ID)
+			+ "&client_secret=" + p.getProperty(PROP_CLI_SECR)
+			+ "&redirect_uri=" + p.getProperty(PROP_REDIR_URL)
 			+ "&grant_type=authorization_code";
 	}
 

@@ -32,22 +32,14 @@
 					</p:selectBooleanCheckbox>
 					
 				</p:outputPanel>
-				
-				<p:outputLabel value="User NOT logged" 
-								   style="font-weight: bold;" rendered="#{!ctx.auth}"/>
-								
-				<p:panelGrid columns="3">
 
-					<f:facet name="header">
-						<p:message for="someUser"/>
-					</f:facet>
-					
-					<p:outputLabel value="Log as unknown user: " for="someUser"/>
-					<p:inputText id="someUser" value="#{ctx.userName}" label="Unknown user name" required="true"/>
-					<p:commandButton value="Login" actionListener="#{req.login()}" update="@form"/>
+				<div>
+					<p:outputLabel value="User NOT logged" 
+									   style="font-weight: bold;" rendered="#{!ctx.auth}"/>
+					<p:outputLabel value="User NOT a member of the Club"
+								   style="font-weight: bold;" rendered="#{ctx.auth and not ctx.inRole('*')}"/>
+				</div>
 
-				</p:panelGrid>
-				
 			<p:dataTable value="#{db.users}" var="u">
 			
 				<p:column headerText="id">
@@ -79,8 +71,7 @@
 				</p:column>
 
 				<p:column>
-					<p:commandLink value="Login" actionListener="#{req.login()}" 
-								   update="@all" process="@this">
+					<p:commandLink value="Login" update="@all" process="@this">
 						<f:setPropertyActionListener target="#{ctx.user}" value="#{u}"/>
 					</p:commandLink>
 				</p:column>

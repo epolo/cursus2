@@ -1,18 +1,46 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <body>
 
         <ui:composition template="/WEB-INF/templates/main.xhtml">
 
             <ui:define name="title">
-                ExProfesso
+                Приглашение в клуб ExProfesso
             </ui:define>
 
             <ui:define name="content">
-                <h1> Приглашение в клуб </h1>
+                <h1> Добро пожаловать в клуб ExProfesso! </h1>
+				
+				<p:panel rendered="#{ctx.auth and not ctx.inRole('*')}">
+					<h:form>
+						<p:panelGrid columns="1">
+
+							<h:panelGrid columns="4">
+								<p:outputLabel for="inv_code" value="Если у Вас уже есть код доступа: "/>
+								<p:inputText id="inv_code" value="#{ctx.invCode}" required="true"/>
+								<p:message for="inv_code"/>
+								<p:commandButton value="Указать код" actionListener="#{ctx.verifyInvCode}" 
+												 process="inv_code" update="@form"/>
+							</h:panelGrid>
+						
+							<p:outputPanel style="height: 10px; width: 100%;">
+								&nbsp;
+							</p:outputPanel>
+							
+							<p:outputLabel for="code_req" value="Для получения кода кода доступа напишите нам о себе и своём ребёнке"/>
+							<p:message for="code_req"/>
+							<p:inputTextarea id="code_req" cols="70" rows="10" required="true" value="#{ctx.codeRequest}"/>
+							<p:commandButton value="Отправить" process="code_req" actionListener="#{ctx.codeReq}"
+											 update="@form"/>
+						</p:panelGrid>
+
+					</h:form>
+				</p:panel>
             </ui:define>
 
         </ui:composition>

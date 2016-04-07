@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
@@ -25,6 +27,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @ManagedBean(name = "ctx")
@@ -41,6 +45,8 @@ public class ContextMBean implements Serializable {
 	private Users user;
 	private List<Courses> myCourses;
 	private String extCookie;
+	private String invCode;
+	private String codeRequest;
 	private boolean forumAdmin;
 	static final String EXTSESSION_COOKIE = "EXTSESSION";
 
@@ -64,15 +70,49 @@ public class ContextMBean implements Serializable {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-		user = null;
-	}
-
 	public Users getUser() {
 		return user;
 	}
 
+	private void updateExtCookie() {
+		if (extCookie == null) {
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			extCookie = "EXT-" + ec.getSessionId(true);
+			HashMap<String, Object> props = new HashMap<>();
+			props.put("path", "/");
+			ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+		}
+	}
+
+	/**
+	 * Utility to call from servlet context
+	 */
+	public void updateExtCookie(HttpServletRequest req, HttpServletResponse resp) {
+		if (extCookie == null) {
+			extCookie = "EXT-" + req.getSession().getId();
+			Cookie coo = new Cookie(EXTSESSION_COOKIE, extCookie);
+			coo.setPath("/");
+			resp.addCookie(coo);
+		}
+	}
+	
+	public void setUser(Users user, String sessId) {
+		this.user = user;
+		if (user == null) {
+			userName = null;
+			if (extCookie != null) {
+				app.getExtUsersMap().remove(extCookie);
+				extCookie = null;
+			}
+		} else {
+			userName = user.getName();
+			if (user.getPhpId() != null) {
+				updateExtCookie();
+				app.getExtUsersMap().put(extCookie, user.getPhpId());
+			}
+		}
+	}
+	
 	public void setUser(Users user) {
 		this.user = user;
 		if (user == null) {
@@ -82,18 +122,36 @@ public class ContextMBean implements Serializable {
 				extCookie = null;
 			}
 		} else {
-			if (extCookie == null) {
-				ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-				extCookie = "EXT-" + ec.getSessionId(true);
-				HashMap<String, Object> props = new HashMap<>();
-				props.put("path", "/");
-				ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
-			}
-			app.getExtUsersMap().put(extCookie, user.getPhpId());
 			userName = user.getName();
+			if (user.getPhpId() != null) {
+				if (extCookie == null) {
+					ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+					extCookie = "EXT-" + ec.getSessionId(true);
+					HashMap<String, Object> props = new HashMap<>();
+					props.put("path", "/");
+					ec.addResponseCookie(EXTSESSION_COOKIE, extCookie, props);
+				}
+				app.getExtUsersMap().put(extCookie, user.getPhpId());
+			}
 		}
 	}
 
+	public String getInvCode() {
+		return invCode;
+	}
+
+	public void setInvCode(String invCode) {
+		this.invCode = invCode;
+	}
+
+	public String getCodeRequest() {
+		return codeRequest;
+	}
+
+	public void setCodeRequest(String codeRequest) {
+		this.codeRequest = codeRequest;
+	}
+	
 	public List<Courses> getMyCourses() {
 		if (user != null && myCourses == null) {
 			myCourses = db.select(Courses.class, "select c.courseId from CoursesStudents c where c.studentId.id = ?1", 
@@ -115,16 +173,18 @@ public class ContextMBean implements Serializable {
 	}
 
 	/**
-	 * @param role - comma separated roles
+	 * @param roles - comma separated roles
 	 */
-	public boolean inRole(String role) {
-		if (user == null || role == null || role.isEmpty())
+	public boolean inRole(String roles) {
+		if (user == null || roles == null || roles.isEmpty())
 			return false;
-		if ("*".equals(role))
+		String role = user.getRole();
+		if (role == null)
+			return false;
+		if ("*".equals(roles))
 			return true;
-		String r = user.getRole();
-		for (String s : role.split(","))
-			if (r.equals(s))
+		for (String r : roles.split(","))
+			if (role.equals(r))
 				return true;
 		return false;
 	}
@@ -190,5 +250,34 @@ public class ContextMBean implements Serializable {
 			app.getExtUsersMap().put(extCookie, forumAdmin? 1: user.getPhpId());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Forum admin status: " + forumAdmin));
 		}
+	}
+	
+	/**
+	 * @returns true if user is registered
+	 */
+	public boolean authorize(Users u) {
+		if (u == null)
+			return false;
+		if (u.getEmail() != null) try {
+			Users u1 = (Users) db.selectSingle("select u from Users u where u.email=?1", u.getEmail());
+			if (u1 != null) {
+				setUser(u1);
+				return true;
+			}
+		} catch (Exception ex) {
+			Logger.getLogger(ContextMBean.class.getName()).log(Level.SEVERE, "User search error", ex);
+		}
+		setUser(u);
+		return false;
+	}
+	
+	public String verifyInvCode() {
+		FacesContext.getCurrentInstance().addMessage("inv_code", new FacesMessage("Access code verification -- not yet implemented..."));
+		return null;
+	}
+	
+	public String codeReq() {
+		FacesContext.getCurrentInstance().addMessage("code_req", new FacesMessage("Invitation request processing -- not yet implemented..."));
+		return null;
 	}
 }

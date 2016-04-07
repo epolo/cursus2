@@ -19,4 +19,4 @@ insert into smf.smf_members (
  from cursus2.users 
  where email not in (select email_address from smf.smf_members);
 
-update cursus2.users u set u.php_id=(select id_member from smf.smf_members where email_address=u.email);
+update cursus2.users u set u.php_id=(select id_member from smf.smf_members where email_address=u.email) where u.php_id is null;

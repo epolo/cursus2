@@ -1,15 +1,10 @@
 package web.mbeans;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @ManagedBean(name = "req")
 @RequestScoped
@@ -19,7 +14,7 @@ public class RequestMBean {
 	ContextMBean ctx;
 	
 	private String curDir;
-	
+
 	public RequestMBean() {
 	}
 
@@ -53,14 +48,6 @@ public class RequestMBean {
 		if (!d.startsWith("/"))
 			s = s.substring(1);
 		return  d.equals(s);
-	} 
-	
-	public String login() {
-		String ret = getCurDir();
-		if (!ret.endsWith("/"))
-			ret += '/';
-		auth2();
-		return ret;
 	}
 
 	public String logout() {
@@ -80,9 +67,6 @@ public class RequestMBean {
 			FacesContext.getCurrentInstance().getExternalContext()
 					.redirect(dir + "index");
 		}
-	}
-	
-	private void auth2() {
 	}
 	
 	public void redirect(String url) throws IOException {

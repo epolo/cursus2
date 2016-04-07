@@ -3,9 +3,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Start JSP Page</title>
+        <title>Test SMF forum</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Hello SMF!</h1>
+		
+<%
+StringBuffer u = request.getRequestURL();
+int i = u.indexOf("/", 8);
+if (i > 0) {
+	u = u.delete(i, u.length());
+}
+u.append("/cursus2/userid");
+%>
+<p>
+	u: <%= u %>
+</p>
     </body>
 </html>

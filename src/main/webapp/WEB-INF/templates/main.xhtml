@@ -45,8 +45,8 @@
 							<h:form>
 								
 							<p:outputPanel rendered="#{!ctx.auth}">
-								<p:link outcome="/users" value="Google+ ..." 
-										title="Авторизоваться через сервис Google+"/>
+								<p:link href="/login"
+										value="Google+ ..." title="Авторизоваться через сервис Google+"/>
 								<p:commandLink value="?" onclick="PF('gglHelp').show();"
 											   style="background: #ece3a5; border: 1px solid;"/>
 								<p:dialog widgetVar="gglHelp" closable="true" closeOnEscape="true" 

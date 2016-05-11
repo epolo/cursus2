@@ -103,7 +103,8 @@ public class AppMBean {
 		props = loader.loadProp(PROPS_FILE_PARAM);
 		ggleProps = loader.loadProp(GGLE_PROPS_FILE_PARAM);
 		awsProps = loader.loadProp(AWS_PROPS_FILE_PARAM);
-		awsCredentials = new BasicAWSCredentials(awsProps.getProperty("aws_access_key_id"), 
+		awsCredentials = null == awsProps.getProperty("aws_access_key_id")? null:
+				new BasicAWSCredentials(awsProps.getProperty("aws_access_key_id"), 
 												awsProps.getProperty("aws_secret_access_key"));
 	}
 

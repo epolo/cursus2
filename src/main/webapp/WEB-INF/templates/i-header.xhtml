@@ -1,0 +1,68 @@
+	<header id="main-header" class="main-header full-section black-section"
+			xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+			xmlns:h="http://xmlns.jcp.org/jsf/html"
+			xmlns:p="http://primefaces.org/ui">
+		<div class="head-side">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 col-xs-12">
+						<figure id="main-logo">
+							<h:link outcome="/index"><img src="/mm-res/img/logo.png" alt=""/></h:link>
+						</figure>
+					</div>
+					<div class="col-sm-6 col-xs-12">
+						<div class="text-right">
+							<h:form>
+							<ezcomp:lang/>
+							<button id="mobile-button"><i class="fa fa-bars"></i></button>
+							<ezcomp:main-menu isIndex="true"/>
+							<h:link rendered="#{!ctx.auth}" outcome="/users" class="btn btn-main-theme" value="#{msg.header_enter}"/>
+							<ezcomp:user-menu rendered="#{ctx.auth}"/>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="header-slider" class="owl-sliders">
+			<div class="one-full-item section-box full-section" style="background-image: url('/mm-res/img/header/slide_01.jpg');">
+				<div class="middle-content">
+					<div class="section-title text-center">
+						<h1>Vitae, non scholae discimus!</h1>
+						<small>#{msg.header_vitae}</small>
+						<div class="section-btn-side">
+							<a href="#section-1" class="btn btn-default">#{msg.header_knowMore}</a>
+						</div>
+					</div>
+				</div>
+				<div class="black-filter"></div>
+			</div>
+			<div class="one-full-item section-box full-section" style="background-image: url('/mm-res/img/header/slide_02.jpg');">
+				<div class="middle-content">
+					<div class="section-title text-center">
+						<h1>Vitae, non scholae discimus!</h1>
+						<small>#{msg.header_vitae}</small>
+						<div class="section-btn-side">
+							<a href="#section-1" class="btn btn-default">#{msg.header_knowMore}</a>
+						</div>
+					</div>
+				</div>
+				<div class="black-filter"></div>
+			</div>
+			<div class="one-full-item section-box full-section" style="background-image: url('/mm-res/img/header/slide_03.jpg');">
+				<div class="middle-content">
+					<div class="section-title text-center">
+						<h1>Vitae, non scholae discimus!</h1>
+						<small>#{msg.header_vitae}</small>
+						<div class="section-btn-side">
+							<a href="#section-1" class="btn btn-default">#{msg.header_knowMore}</a>
+						</div>
+					</div>
+				</div>
+				<div class="black-filter"></div>
+			</div>
+		</div>
+		<div class="section-bottom text-center hidden-xs">
+			<a href="#section-1"><img src="/mm-res/img/mouse.png" alt=""/></a>
+		</div>
+	</header>

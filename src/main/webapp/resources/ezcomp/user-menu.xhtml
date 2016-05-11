@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<!-- INTERFACE -->
+	<cc:interface>
+		<cc:attribute name="isIndex" type="boolean" default="false"/>
+	</cc:interface>
+
+	<!-- IMPLEMENTATION -->
+	<cc:implementation>
+
+		<nav class="#{cc.attrs.isIndex? '': 'in-menu-nav'}">
+			<ul>
+				<li class="menu-item-has-children">
+					<a href="#">#{ctx.userName}</a>
+					<ul class="sub-menu">
+						<c:if test="#{ctx.inRole('*')}">
+							<li><h:link outcome="/personal/index" value="#{msg.usermenu_profile}"/></li>
+							<li><h:link outcome="/personal/my-courses" value="#{msg.usermenu_mycourses}"/></li>
+						</c:if>
+						<c:if test="#{!ctx.inRole('*')}">
+							<li><h:link outcome="/invitation" value="#{msg.usermenu_invitation}"/></li>
+						</c:if>
+						<li><h:commandLink value="#{msg.usermenu_exit}" action="#{req.logout()}"/></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		
+	</cc:implementation>
+</html>

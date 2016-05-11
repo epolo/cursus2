@@ -40,7 +40,8 @@ public class ContextMBean implements Serializable {
 	private AppMBean app;
 	@ManagedProperty("#{db}")
 	DbMBean db;
-	
+
+	private String lang;
 	private String userName;
 	private Users user;
 	private List<Courses> myCourses;
@@ -209,6 +210,18 @@ public class ContextMBean implements Serializable {
 
 	private String getUserDir() {
 		return user == null? null: app.getS3Dir() + 'u' + user.getId() + '/';
+	}
+
+	public String getLang() {
+		if (lang == null) {
+			//// TODO: resolve language from User Agent parameters
+			lang = "ru";
+		}
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
 	/* returns URL */

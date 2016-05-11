@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+	<!-- INTERFACE -->
+	<cc:interface>
+		<cc:attribute name="class" required="false"/>
+	</cc:interface>
+
+	<!-- IMPLEMENTATION -->
+	<cc:implementation>
+		
+		<nav id="main-menu">
+			<ul>
+				<li class="menu-item-has-children">
+					<h:link outcome="/index">Клуб</h:link>
+					<ul class="sub-menu">
+						<li><h:link outcome="/about">О проекте</h:link></li>
+						<li><h:link outcome="/forum/index">Форум</h:link></li>
+						<li><h:link outcome="/media/index">Медиатека</h:link></li>
+					</ul>
+				</li>
+				<li class="menu-item-has-children">
+					<a href="/courses/index">Курсы</a>
+					<ul class="sub-menu">
+						<li><a href="/courses/index">Математика</a></li>
+						<li><a href="/courses/index">Русский язык</a></li>
+						<li><a href="/courses/index">Интеллектуальный клуб</a></li>
+						<li><a href="/courses/index">Бридж</a></li>
+						<li><a href="/courses/index">Все курсы</a></li>
+					</ul>
+				</li>
+				<li class="menu-item-has-children">
+					<a href="/professors/index">Преподаватели</a>
+					<ul class="sub-menu">
+						<li><a href="/professors/index">Математика</a></li>
+						<li><a href="/professors/index">Русский язык</a></li>
+						<li><a href="/professors/index">Интеллектуальный клуб</a></li>
+						<li><a href="/professors/index">Бридж</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+			
+	</cc:implementation>
+</html>

@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
+		
+		<ui:define name="content">
+			<div class="col-sm-8 col-xs-12">
+				<article id="single-article" class="single-article white-box roboto">
+					<div class="content-inner-side">
+						<h3>Контакты</h3>
+						<p>Уважаемые пользователи!<br/>Приветствуем вас в клубе Ex Professo. Будем рады ответить на все ваши вопросы</p>
+						<div class="row">
+							<div class="col-sm-4 col-xs-12">
+								<div class="address-block" style="background-image: url('/mm-res/img/address-1.png');" data-mh="items-address">
+									<h5>Адрес</h5>
+									<p><strong>Company GmbH</strong> Musterstrasse 83c 01234 Musterstadt Deutschland</p>
+								</div>
+							</div>
+							<div class="col-sm-4 col-xs-12">
+								<div class="address-block" style="background-image: url('/mm-res/img/address-3.png');" data-mh="items-address">
+									<h5>Эл.почта</h5>
+									<a href="mailto:info@exprofesso.org">info@exprofesso.org</a>
+								</div>
+							</div>
+						</div>
+						<h3>Ваше сообщение</h3>
+						<form action="#">
+							<div class="row">
+								<div class="col-sm-6 col-xs-12">
+									<input type="text" class="form-control" placeholder="Имя"/>
+								</div>
+								<div class="col-sm-6 col-xs-12">
+									<input type="email" class="form-control" placeholder="E-mail"/>
+								</div>
+								<div class="col-sm-12 col-xs-12">
+									<textarea cols="30" rows="5" class="form-control" placeholder="Сообщение"></textarea>
+								</div>
+								<div class="col-sm-12 col-xs-12">
+									<button type="submit" class="btn btn-main-theme btn-md">Отправить</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</article>
+			</div>
+		</ui:define>
+		
+	</ui:composition>
+
+</html>
+

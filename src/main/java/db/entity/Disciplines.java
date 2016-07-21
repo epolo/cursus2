@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package db.entity;
 
 import java.io.Serializable;
@@ -22,10 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- *
- * @author Половников ЕА
- */
 @Entity
 @Table(name = "disciplines")
 @NamedQueries({
@@ -50,6 +41,8 @@ public class Disciplines implements Serializable {
 	private Date updatedAt;
 	@Column(name = "old_id")
 	private Integer oldId;
+	@Column(name = "uuid")
+	private String uuid;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "disciplineId")
 	private Collection<Courses> coursesCollection;
 
@@ -105,6 +98,14 @@ public class Disciplines implements Serializable {
 
 	public void setOldId(Integer oldId) {
 		this.oldId = oldId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public Collection<Courses> getCoursesCollection() {

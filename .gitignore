@@ -8,3 +8,13 @@
 /deploy/tomcat/temp/**
 /deploy/tomcat/lib/
 /design/
+/deploy/tomcat/webapps/ROOT/upload/abd4b091-17ae-11e6-9e3e-00ff1fc35e50/
+/deploy/tomcat/webapps/ROOT/upload/ab077c8e-17ae-11e6-9e3e-00ff1fc35e50/
+/deploy/tomcat/webapps/ROOT/upload/ab077a7c-17ae-11e6-9e3e-00ff1fc35e50/
+/deploy/tomcat/webapps/ROOT/upload/abd4c3e5-17ae-11e6-9e3e-00ff1fc35e50/
+/deploy/tomcat/webapps/ROOT/upload/ab07611d-17ae-11e6-9e3e-00ff1fc35e50/
+/deploy/tomcat/webapps/ROOT/upload/ab077877-17ae-11e6-9e3e-00ff1fc35e50/
+/route-53/
+*.zip
+*.tgz
+*.gz

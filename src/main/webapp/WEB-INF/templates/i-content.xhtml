@@ -34,7 +34,7 @@
 				</div>
 			</div>
 			<div class="text-center button-side">
-				<a href="#" class="btn btn-main-theme btn-md">О проекте</a>
+				<h:link outcome="/about" styleClass="btn btn-main-theme btn-md" value="О проекте"/>
 			</div>
 			<div class="text-center">
 				<img src="/mm-res/img/section-icon.png" alt=""/>
@@ -80,7 +80,7 @@
 									<img src="/mm-res/img/section-4/icon_head.png" alt=""/>
 								</div>
 								<div class="right">
-									<h5>Возможность подобрать\создать индивидуальный курс по любому предмету.</h5>
+									<h5>Возможность создать индивидуальный курс по любому предмету</h5>
 									<small></small>
 								</div>
 							</div>
@@ -92,8 +92,9 @@
 									<img src="/mm-res/img/section-4/icon_empty.png" alt=""/>
 								</div>
 								<div class="right">
-									<p class="name">EX Professo <i class="fa fa-info-circle"></i></p>
-									<p>Tantum possumus, quantum scimus. <br/>Мы можем столько, сколько знаем.</p>
+									<p class="name">Подбор индивидуального курса <i class="fa fa-info-circle"></i></p>
+									<p>Dubitando ad veritatem pervenimus. <br/>
+										К истине идём через сомненья.</p>
 								</div>
 							</div>
 							<div class="meta-side">
@@ -113,7 +114,7 @@
 									<img src="/mm-res/img/section-4/icon_mathe.png" alt=""/>
 								</div>
 								<div class="right">
-									<h5>Математические бои и методы решения задач повышенной сложности. – математика</h5>
+									<h5>Математические бои и методы решения задач повышенной сложности</h5>
 									<small>Математика</small>
 								</div>
 							</div>
@@ -225,7 +226,7 @@
 								</div>
 								<div class="right">
 									<p class="name">Лариса Михайловна Фельдман <i class="fa fa-info-circle"></i></p>
-									<p>Quidquid discis, tibi discis. <br/>Чему бы ты ни учился, ты учишься для себя.</p>
+									<p>Exercitatio artem parat. <br/>Упражнения рождают мастерство.</p>
 								</div>
 							</div>
 							<div class="meta-side">
@@ -378,13 +379,18 @@
 		<div class="spacer-100"></div>
 	</section>
 	<section id="section-7" class="section" style="background-color: #e8e7e6;">
-		<div class="container">
-			<h:panelGroup rendered="#{not ctx.auth}" layout="block" styleClass="section-title text-center">
+		<h:panelGroup rendered="#{not ctx.auth}" layout="block" styleClass="container">
+			<div class="section-title text-center">
 				<h:outputText value="#{msg.bottom_title}" escape="false"/>
-			</h:panelGroup>
-			<h:panelGroup rendered="#{not ctx.auth}" layout="block" styleClass="text-center">
+			</div>
+			<div class="text-center">
+				<a href="#{request.contextPath}/login">
+					<img src="/mm-res/img/button.png" alt=""/>
+				</a>
+<ui:remove>
 				<h:link outcome="/users"><img src="/mm-res/img/button.png" alt=""/></h:link>
-			</h:panelGroup>
+</ui:remove>
+			</div>
 			<div class="clearfix"></div>
 			<div class="spacer-20"></div>
 			<div class="text-center section-description">
@@ -392,6 +398,6 @@
 					<f:param value="https://s3-eu-west-1.amazonaws.com/cursus2/docs/user_agreement.pdf"/>
 				</h:outputFormat>
 			</div>
-		</div>
+		</h:panelGroup>
 	</section>
 </ui:insert>

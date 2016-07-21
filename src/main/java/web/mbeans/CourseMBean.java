@@ -1,14 +1,14 @@
 package web.mbeans;
 
-import db.entity.CourseTopics;
 import db.entity.Courses;
 import db.entity.CoursesStudents;
+import db.entity.Disciplines;
 import db.entity.Users;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -20,16 +20,18 @@ import javax.faces.context.FacesContext;
 public class CourseMBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(CourseMBean.class.getName());
-	
+
 	@ManagedProperty(value = "#{db}")
 	private DbMBean db;
 
 	@ManagedProperty(value = "#{ctx}")
 	private ContextMBean ctx;
 	
+	private Disciplines disc;
 	private List<Courses> coursesLst;
+
 	private boolean showDeleted;
-	private boolean showPast;
+	private boolean showPast = true;
 	private Courses selected;
 	private List<StudentAnswer> ansList;
 	private int curAnswer = 0;
@@ -38,17 +40,6 @@ public class CourseMBean implements Serializable {
 	private TopicsProcessor topProc;
 	
 	public CourseMBean() {
-	}
-	
-	public Integer getSelectedId() {
-		return selected == null? null: selected.getId();
-	}
-	
-	public void setSelectedId(Integer id) {
-		selected = db.find(Courses.class, id);
-		if (selected == null) {
-			logger.warning("Cannot find course by id = " + id);
-		}
 	}
 
 	public void setDb(DbMBean db) {
@@ -59,9 +50,68 @@ public class CourseMBean implements Serializable {
 		this.ctx = ctx;
 	}
 
+	public Disciplines getDisc() {
+		return disc;
+	}
+
+	public void setDisc(Disciplines disc) {
+		this.disc = disc;
+	}
+
+	public String getDiscUuid() {
+		return disc == null? null: disc.getUuid();
+	}
+
+	public void setDiscUuid(String uuid) {
+		disc = db.findByUuid(Disciplines.class, uuid);
+	}
+
+	public Integer getSelectedId() {
+		return selected == null? null: selected.getId();
+	}
+	
+	public void setSelectedId(Integer id) {
+		selected = db.find(Courses.class, id);
+		if (selected == null) {
+			logger.warning("Cannot find course by id = " + id);
+		}
+	}
+	
+	public String getSelectedUuid() {
+		return selected == null? null: selected.getUuid();
+	}
+	
+	public void setSelectedUuid(String uuid) {
+		selected = db.findByUuid(Courses.class, uuid);
+		if (selected == null) {
+			logger.warning("Cannot find course by id = " + uuid);
+		}
+	}
+	
 	public List<Courses> getCoursesLst() {
 		if (coursesLst == null) {
-			coursesLst = db.getCoursesList(showDeleted, showPast);
+			// coursesLst = db.getCoursesList(showDeleted, showPast);
+			ArrayList<String> wh = new ArrayList<>();
+			if (!showDeleted)
+				wh.add("o.isDelete = false");
+			if (!showPast)
+				wh.add("o.endsAt > CURRENT_DATE");
+			if (disc != null)
+				wh.add("o.disciplineId.id = " + disc.getId());
+			
+			StringBuilder sql = new StringBuilder("SELECT o FROM Courses o");
+			if (!wh.isEmpty()) {
+				boolean first = true;
+				for (String s : wh) {
+					if (first) {
+						sql.append(" WHERE ");
+						first = false;
+					} else
+						sql.append(" AND ");
+					sql.append(s);
+				}
+			}
+			coursesLst = db.select(Courses.class, sql.toString());
 		}
 		return coursesLst;
 	}

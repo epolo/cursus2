@@ -1,69 +1,153 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core"
 	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html"
-	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+	  xmlns:z="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-    <body>
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
 
-        <ui:composition template="/WEB-INF/templates/main.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewAction immediate="true" action="#{ctx.checkUserRole('*')}"/>
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="content">
 
-			<ui:define name="metadata">
-				<f:metadata>
-					<f:viewAction action="#{ctx.checkUserRole('*')}"/>
-				</f:metadata>
-			</ui:define>
-			
-            <ui:define name="title">
-                Мои курсы
-            </ui:define>
-			
-            <ui:define name="content">
-			
-				<h:outputStylesheet name="css/content.css"/>
-					
-				<h:form>
+				<div class="col-sm-8 col-xs-12">
+					<article id="single-article" class="single-article white-box roboto">
+						<div class="content-inner-side">
+							<h3>
+								Мои курсы
+							</h3>
+							<h:form>
 
-					<h1> Мои курсы </h1>
 
 					<p:messages id="msgs"/>
 					
-					<p:outputPanel rendered="#{ctx.inRole('teacher,admin')}" id="panel_1">
-						
-						<p:dataList type="unordered" value="#{ctx.user.coursesCollection}" var="c"
-									emptyMessage="Вы пока не cоздали ни одного курса.">
-							<p:link outcome="/courses/detail" value="#{c.title}">
-								<f:param name="courseId" value="#{c.id}"/>
-							</p:link>
-							<ezcomp:courseState course="#{c}" hasDates="true">
-								<f:facet name="open">
-									<span>(Some facet text)</span>
-								</f:facet>
-							</ezcomp:courseState>
-						</p:dataList>
+					<p:outputPanel rendered="#{ctx.inRole('teacher,admin')}">
 
-						<p:link outcome="/courses/edit" value="Создать курс"/>
+
+					<ui:repeat value="#{ctx.user.coursesCollection}" var="c" varStatus="st">
+					<div class="course-block big-course">
+						<div class="top-side" data-mh="items-с">
+							<div class="icon-lr">
+								<div class="left">
+									<img src="#{app.avatar.getCourseUrl(c, 'SMALL')}" alt=""/>
+								</div>
+								<div class="right">
+									<h5>#{c.title}</h5>
+									<small>#{c.disciplineId.name}</small>
+								</div>
+							</div>
+							<div><h:outputText value="#{c.description}" escape="false"/></div>
+						</div>
+						
+							<div class="bottom-side" data-mh="items-d">
+								<div class="icon-lr">
+									<p>
+										Занятия с 
+										<h:outputText value="#{c.startsAt}">
+											<f:convertDateTime type="date" dateStyle="medium"/>
+										</h:outputText>  по
+										<h:outputText value="#{c.endsAt}">
+											<f:convertDateTime type="date" dateStyle="medium"/>
+										</h:outputText>
+
+										<span jsf:rendered="#{c.open}"> Запись на курс открыта ( #{c.coursesStudentsCollection.size()} из #{c.studentsLimit}) </span>
+
+									</p>									
+									<p>
+										<h:link outcome="/courses/edit" value="Редактировать курс">
+											<f:param name="uuid" value="#{c.uuid}"/>
+										</h:link>
+									</p>
+								</div>
+							</div>
+						
+					</div>
+					</ui:repeat>
+
+
+					<div>
+						<p:link outcome="/courses/edit" value=" --- Создать курс">
+							<f:param name="uuid" value="new"/>
+						</p:link>
+					</div>
+
 						
 					</p:outputPanel>
 					
 					<p:outputPanel rendered="#{ctx.inRole('student') or not empty ctx.myCourses}" id="panel_2">
-						<p:dataList type="unordered" value="#{ctx.myCourses}" var="c"
-									emptyMessage="Вы пока не записались ни на один курс.">
-							<p:link outcome="/courses/detail" value="#{c.title}">
-								<f:param name="courseId" value="#{c.id}"/>
-							</p:link>
-							<ezcomp:courseState course="#{c}" hasDates="true"/>
-						</p:dataList>
+
+					<h:outputText rendered="#{empty ctx.myCourses}" value="Вы пока не выбрали ни один курс"/>
+									  
+					<ui:repeat value="#{ctx.myCourses}" var="c" varStatus="st">
+					<div class="course-block big-course">
+						<div class="top-side" data-mh="items-с">
+							<div class="icon-lr">
+								<div class="left">
+									<img src="#{app.avatar.getCourseUrl(c, 'SMALL')}" alt=""/>
+								</div>
+								<div class="right">
+									<h5>#{c.title}</h5>
+									<small>#{c.disciplineId.name}</small>
+								</div>
+							</div>
+							<div><h:outputText value="#{c.description}" escape="false"/></div>
+						</div>
+						
+							<div class="bottom-side" data-mh="items-d">
+								<div class="icon-lr">
+									<div class="left">
+										<img src="#{app.avatar.getUserUrl(c.authorId, 'SMALL')}" alt=""/>
+									</div>
+									<div class="right">
+										<p class="name">
+											<h:link outcome="/professors/detail" includeViewParams="true" value="#{c.authorId.fullName}">
+												<f:param name="uuid" value="#{c.authorId.uuid}"/>
+											</h:link>
+											<i class="fa fa-info-circle"></i>
+										</p>
+										<p>
+											Занятия с 
+											<h:outputText value="#{c.startsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>  по
+											<h:outputText value="#{c.endsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>
+										</p>
+									</div>
+								</div>
+								<div class="meta-side">
+									<span class="meta-span">
+										<span class="success" jsf:rendered="#{c.open}"><i class="fa fa-group"></i> Идёт набор</span>
+										<span class="success" jsf:rendered="#{c.started and not c.finished}"><i class="fa fa-group"></i> Идёт обучение</span>
+										<span class="red" jsf:rendered="#{c.finished}"><i class="fa fa-group"></i> Курс завершён</span>
+										<span class="primary"><img src="/mm-res/img/book.png" alt=""/> <h:outputText value="#{c.subTitle}"/> </span>
+									</span>
+								</div>
+							</div>
+						
+					</div>
+					</ui:repeat>
+
 					</p:outputPanel>
 
-				</h:form>
-				
-            </ui:define>
+							</h:form>
+						</div>
+						
+					</article>
+				</div>
 
-        </ui:composition>
+		</ui:define>
+		
+	</ui:composition>
 
-    </body>
 </html>

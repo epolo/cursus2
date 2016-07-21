@@ -4,29 +4,34 @@ import db.entity.Courses;
 import db.entity.Disciplines;
 import db.entity.Users;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 @ManagedBean(name = "db")
 @ApplicationScoped
 public class DbMBean {
 
 	private EntityManagerFactory emf;
-	private List<Disciplines> discList;
 	
 	public DbMBean() {
 	}
 	
-	//public 
-	private EntityManager getEntityManager() {
-		if (emf == null) {
-			emf = Persistence.createEntityManagerFactory("cursus2PU");			
-		}
+	@PostConstruct
+	private void init() {
+		emf = Persistence.createEntityManagerFactory("cursus2PU");					
+	}
+	
+	EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
 /*	
@@ -82,9 +87,12 @@ public class DbMBean {
 				q.setParameter(i++, p);
 			}
 			return q.getSingleResult();
+		} catch (NoResultException nre) {
+			/** ignored **/
 		} finally {
 			em.close();
 		}
+		return null;
 	}
 
 	<T> T find(Class<T> cl, Object pk) {
@@ -138,10 +146,27 @@ public class DbMBean {
 	}
 
 	public List<Disciplines> getDiscList() {
-		if (discList == null) {
-			discList = select(Disciplines.class, "select o from Disciplines o");
+		return select(Disciplines.class, "select o from Disciplines o");
+	}
+
+	<T> T findByUuid(Class<T> cl, String uuid) {
+		EntityManager em = getEntityManager();
+		try {
+			CriteriaBuilder cb = em.getCriteriaBuilder();
+			CriteriaQuery<T> q = cb.createQuery(cl);
+			Root<T> r = q.from(cl);
+			q.where(cb.equal(r.get("uuid"), uuid));
+			return em.createQuery(q).getSingleResult();
+		} catch (NoResultException nre) {
+			/** ignored **/
+		} finally {
+			em.close();
 		}
-		return discList;
+		return null;
+	}
+
+	public void clearCache() {
+		emf.getCache().evictAll();
 	}
 
 }

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:z="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
+
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewAction immediate="true" action="#{ctx.checkUserRole('admin')}"/>
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="content">
+
+			<h2> Админка </h2>
+
+			<h:link outcome="users" value="Users"/>
+			
+			<h:form>
+				
+			<h:messages id="msgs" showSummary="true" showDetail="true"/>
+				
+			<h:panelGrid columns="1">
+
+				<h:panelGroup layout="block">
+					
+					Request JPQL
+					<br/>
+					<h:inputTextarea value="#{dbAdm.query}" cols="80" rows="5"/>
+					<br/>
+					<h:commandButton value="Submit" action="#{dbAdm.exec()}"/>
+					<br/>
+					<h:outputText rendered="#{dbAdm.update}" value="Updated #{dbAdm.qty} entries"/>
+
+				</h:panelGroup> 
+
+				<h:dataTable rendered="#{not empty dbAdm.result}" value="#{dbAdm.result}" var="e">
+				
+					<f:facet name="header">
+						<h:outputText value="Query result"/>
+					</f:facet>
+					
+					<h:column>
+						<h:outputText value="#{e}"/>
+					</h:column>
+					
+				</h:dataTable>
+				
+				<h:commandButton value="Очистить кэш" action="#{db.clearCache}"/>
+				
+				<h:commandButton value="Обновить MessageBundle" action="#{app.reloadBundle}"/>
+			</h:panelGrid>
+			</h:form>
+
+		</ui:define>
+		
+	</ui:composition>
+
+</html>
+

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package db.entity;
 
 import java.io.Serializable;
@@ -23,10 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- *
- * @author Половников ЕА
- */
 @Entity
 @Table(name = "users")
 @NamedQueries({
@@ -50,14 +41,12 @@ public class Users implements Serializable {
 	private String status;
 	@Column(name = "avatar_url")
 	private String avatarUrl;
-/*
-	@Column(name = "first_name")
-	private String firstName;
-	@Column(name = "last_name")
-	private String lastName;
-*/
+	@Column(name = "avatar_file")
+	private String avatarFile;
 	@Column(name = "name")
 	private String name;
+	@Column(name = "full_name")
+	private String fullName;
 	@Lob
     @Column(name = "personal_info")
 	private String personalInfo;
@@ -73,6 +62,8 @@ public class Users implements Serializable {
 	private Integer oldId;
 	@Column(name = "php_id")
 	private Integer phpId;
+	@Column(name = "uuid")
+	private String uuid;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "studentId")
 	private Collection<CoursesStudents> coursesStudentsCollection;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "authorId")
@@ -145,12 +136,28 @@ public class Users implements Serializable {
 		this.avatarUrl = avatarUrl;
 	}
 
+	public String getAvatarFile() {
+		return avatarFile;
+	}
+
+	public void setAvatarFile(String avatarFile) {
+		this.avatarFile = avatarFile;
+	}
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getPersonalInfo() {
@@ -191,6 +198,14 @@ public class Users implements Serializable {
 
 	public void setPhpId(Integer phpId) {
 		this.phpId = phpId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public Collection<CoursesStudents> getCoursesStudentsCollection() {

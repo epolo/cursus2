@@ -6,6 +6,9 @@
 	  xmlns:p="http://primefaces.org/ui">
 
 	<f:view>
+		<f:metadata>
+			<f:viewAction immediate="true" action="#{ctx.checkUserRole('admin')}"/>
+		</f:metadata>
 		
     <h:head>
         <title>Users</title>
@@ -26,11 +29,6 @@
 								   style="font-weight: bold;" rendered="#{ctx.auth}"/>
 					<p:commandButton value="Logout" actionListener="#{req.logout()}" 
 									 process="@this" update="@form" style="margin-left: 40px;"/> 
-					
-					<p:selectBooleanCheckbox rendered="#{ctx.inRole('admin')}" itemLabel="Log as forum admin" value="#{ctx.forumAdmin}">
-						<p:ajax update="msgs" listener="#{ctx.changeForumAdmin}" process="@this" />
-					</p:selectBooleanCheckbox>
-					
 				</p:outputPanel>
 
 				<div>
@@ -67,7 +65,7 @@
 				</p:column>
 				
 				<p:column headerText="personalInfo">
-					<h:outputText value="#{u.personalInfo}" escape="false"/>
+					<h:outputText value="#{u.personalInfo}" escape="true"/>
 				</p:column>
 
 				<p:column>

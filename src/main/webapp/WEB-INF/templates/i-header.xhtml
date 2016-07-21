@@ -13,11 +13,9 @@
 					<div class="col-sm-6 col-xs-12">
 						<div class="text-right">
 							<h:form>
-							<ezcomp:lang/>
+							<!-- ezcomp:lang/ -->
 							<button id="mobile-button"><i class="fa fa-bars"></i></button>
 							<ezcomp:main-menu isIndex="true"/>
-							<h:link rendered="#{!ctx.auth}" outcome="/users" class="btn btn-main-theme" value="#{msg.header_enter}"/>
-							<ezcomp:user-menu rendered="#{ctx.auth}"/>
 							</h:form>
 						</div>
 					</div>

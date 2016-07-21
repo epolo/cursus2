@@ -1,116 +1,154 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	  xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html">
+	  xmlns:jsf="http://xmlns.jcp.org/jsf"
+	  xmlns:z="http://xmlns.jcp.org/jsf/passthrough">
+	  <!-- xmlns:p="http://primefaces.org/ui" -->
 
-    <body>
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
 
-        <ui:composition template="/WEB-INF/templates/main.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewParam name="uuid" value="#{courseEdit.courseUuid}"/>
+				<f:viewAction action="#{ctx.checkNotNull(courseEdit.course)}"/> 
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="side-menu">
 
-            <ui:define name="title">
-                #{courseEdit.newCourse? 'Создание курса': 'Редактирование курса'}
-            </ui:define>
+				<div class="col-sm-4 col-xs-12">
+					<aside id="sidebar-side" class="white-box roboto">
+						<div class="widget-side">
+							<h3 class="widget-title">
+								Мои курсы
+							</h3>
 
-            <ui:define name="content">
+							<ul class="toggle-navigation">
+								<ui:repeat value="#{ctx.user.coursesCollection}" var="c">
+								<li>
+									<h:link value="#{c.title}">
+										<f:param name="uuid" value="#{c.uuid}"/>
+									</h:link>
+								</li>
+								</ui:repeat>
+								
+								<li>
+								<h:link value="--- Создать новый курс ---">
+									<f:param name="uuid" value="new"/>
+								</h:link>
+								</li>
+								
+							</ul>
+						</div>
+					</aside>
+				</div>
+			
+		</ui:define>
+		
+		<ui:define name="content">
 
-				<h:outputStylesheet name="css/content.css"/>
-				<h:outputStylesheet name="css/upload.css"/>
-				
-				<p:messages id="msgs"/>
+			<script src="http://cdn.tinymce.com/4/tinymce.min.js"></script>
+			<script>tinymce.init({ selector:'textarea.tinymce' });</script>
+			
+                <div class="col-sm-8 col-xs-12">
+					<article id="single-article" class="single-article white-box roboto">
+					  <div class="content-inner-side">
+							
+						<h3>
+							  <h:outputText rendered="#{courseEdit.newCourse}" value="Создание нового курса"/>
+							  <h:outputText rendered="#{not courseEdit.newCourse}" value="Редактирование курса #{courseEdit.course.title}"/>
+						</h3>
+						
+							<h:form enctype="multipart/form-data" styleClass="add-information">
+								<h:inputText id="title" value="#{courseEdit.course.title}" styleClass="form-control" 
+											 z:placeholder="Название курса *" required="true" requiredMessage="Необходимо указать название курса"/>
+								<h:inputText id="subTitle" value="#{courseEdit.course.subTitle}" styleClass="form-control" 
+											 z:placeholder="Подзаголовок курса *" required="true" requiredMessage="Необходимо указать подзаголовок курса"/>
 
-				<h1> 
-					<h:outputText value="#{courseEdit.newCourse? 'Создание курса': 'Редактирование курса'}"/>
-				</h1>
-				
-				<h:form>
-					
-					<div align="center"><table border="0">
-						<tr align="top">
-							<td width="125px">
-								<p:graphicImage id="avatar" class="img avatar-medium" value="#{courseEdit.course.coverUrl}"/>
+								<div>
+								<h:outputText value="Количество учеников: "/>
+								<h:inputText id="studentsLimit" value="#{courseEdit.course.studentsLimit}" size="10">
+									<f:validateLongRange minimum="1" maximum="100"/>
+								</h:inputText>
+								<h:outputText value="Занятия с " style="margin-left: 1em;"/>
+								<h:inputText id="startsAt" value="#{courseEdit.course.startsAt}" size="10"
+											 z:placeholder="ДД.ММ.ГГГГ" required="true" requiredMessage="Укажите дату начала курса">
+									<f:convertDateTime dateStyle="short"/>
+								</h:inputText>
+								<h:outputText value=" по "/>
+								<h:inputText id="endsAt" value="#{courseEdit.course.endsAt}" size="10" 
+											 z:placeholder="ДД.ММ.ГГГГ" required="true" requiredMessage="Укажите дату завершения курса">
+									<f:convertDateTime dateStyle="short"/>
+								</h:inputText>
 								<br/>
-								<p:fileUpload fileUploadListener="#{courseEdit.uploadListener}" 
-								  label="Фото"
-								  update="avatar msgs"
-								  process="@this"
-								  auto="true"
-								  accept="image/*"
-								  previewWidth="0"
-								  />
-							</td>
-							<td>
-								<p:inputText value="#{courseEdit.course.title}" required="true" 
-											 requiredMessage="Название курса должно быть заполнено"
-											 title="Название курса" placeholder="Название курса"/>
-								<br/><p:inputText value="#{courseEdit.course.subTitle}"
-												  placeholder="Короткое описание курса" title="Короткое описание курса"/>
-								<br/><p:selectOneMenu value="#{courseEdit.course.disciplineId}" converter="discipline">
-									<f:selectItems value="#{db.discList}" var="d" itemLabel="#{d.name}" itemValue="#{d}"/>
-								</p:selectOneMenu>
-								<br/><p:inputText value="#{courseEdit.course.tags}"
-												  title="Для какого класса, уровня, возраста предназначен этот курс."
-												  placeholder="Для какого класса, уровня, возраста предназначен этот курс."/>
-								<br/><p:calendar value="#{courseEdit.course.startsAt}" placeholder="Дата начала"
-												 required="true" requiredMessage="Дата начала должна быть указана"
-												 locale="ru" navigator="true" pattern="dd-MM-yyyy" title="Дата начала"/>
-								&nbsp;-&nbsp;<p:calendar value="#{courseEdit.course.endsAt}" placeholder="Дата окончания"
-												 required="true" requiredMessage="Дата окончания должна быть указана"
-												 locale="ru" navigator="true" pattern="dd-MM-yyyy" title="Дата окончания"/>
-								<br/><p:inputText value="#{courseEdit.course.price}" placeholder="Стоимость курса" title="Стоимость курса"/>
-								<br/><p:inputText value="#{courseEdit.course.studentsLimit}" placeholder="Количество студентов" 
-												  title="Количество студентов" validatorMessage="Количесто студентов должно быть не меньше 1">
-									<f:validateLongRange minimum="1"/>
-								</p:inputText>
-								<br/><p:editor value="#{courseEdit.course.description}" width="600"/>
-							</td>
-						</tr>
-						<tr align="top">
-							<td>
-								&nbsp;
-							</td>
-							<td>
-								<h3> Анкета для записи на курс </h3>
-							</td>
-						</tr>
-						<tr align="top">
-							<td>
-								&nbsp;
-							</td>
-							<td>
-								<p:dataTable id="quiz" value="#{courseEdit.quest}" var="q" rowIndexVar="i"
-											 emptyMessage="Добавьте вопрос в анкету">
-									<p:column>
-										<p:inputTextarea value="#{q.body}" autoResize="false" placeholder="Текст вопроса №#{i + 1}"/>
-										<br/><p:inputText value="#{q.answer1}" placeholder="Ответ A"/>
-										<br/><p:inputText value="#{q.answer2}" placeholder="Ответ B"/>
-										<br/><p:inputText value="#{q.answer3}" placeholder="Ответ C"/>
-										<br/><p:inputText value="#{q.answer4}" placeholder="Ответ D"/>
-									</p:column>
-									<p:column width="32">
-										<p:commandButton actionListener="#{courseEdit.delQuest(i)}" title="Удалить вопрос" icon="ui-icon-minusthick" update="quiz msgs"/>
-										<f:facet name="footer">
-											<p:commandButton actionListener="#{courseEdit.addQuest}" title="Добавить вопрос" icon="ui-icon-plusthick" update="quiz msgs"/>
+								<h:outputText value="Возрастная категория: "/>
+								<h:inputText id="tags" value="#{courseEdit.course.tags}"/>
+								<h:selectOneMenu value="#{courseEdit.course.disciplineId}" style="margin-left: 7px;" 
+												 converter="discipline">
+									<f:selectItems value="#{db.discList}" var="d" itemLabel="#{d.name}"/>
+								</h:selectOneMenu>
+								</div>
+								<div class="box">
+									<img src="#{app.avatar.getCourseUrl(courseEdit.course, 'MEDIUM')}" title="Иконка курса" style="margin-right: 20px;"/>
+									<ui:fragment>
+										<h:inputFile id="courseIcon" value="#{courseEdit.part}" styleClass="inputfile inputfile-6" z:accept="image/*" />
+										<h:outputLabel for="courseIcon"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> 
+											Загрузите фотографию&hellip;</strong></h:outputLabel>
+									</ui:fragment>
+									<div class="clearfix"></div>
+									<div class="spacer" style="height: 20px;"></div>
+									<h:inputTextarea id="userInfo" value="#{courseEdit.course.description}"
+													 cols="30" rows="10" styleClass="tinymce"/>
+
+									<div class="spacer" style="height: 20px;"></div>
+									<h:dataTable id="questData" value="#{courseEdit.quest}" var="q"
+												 border="2" width="90%">
+										<f:facet name="header">
+											<h:outputText value="Вопросы анкеты"/>
 										</f:facet>
-									</p:column>
-								</p:dataTable>
-							</td>
-						</tr>
-					</table>
-					
-						<p:commandButton value="#{courseEdit.newCourse? 'Создать курс': 'Сохранить изменения'}" actionListener="#{courseEdit.update}"
-										 process="@form" update="@form msgs"/>
-										 
-					</div>
+										<f:facet name="footer">
+											<h:commandButton actionListener="#{courseEdit.addQuest()}" value="Добавить">
+												<f:ajax execute="questData" render="questData"/>
+											</h:commandButton>
+										</f:facet>
+										
+										<h:column>
+											<h:inputTextarea value="#{q.body}" cols="70" rows="3"/>
+											<ul>
+												<li><h:inputText size="50" value="#{q.answer1}" z:placeholder="Ответ 1"/></li>
+												<li><h:inputText size="50" value="#{q.answer2}" z:placeholder="Ответ 2"/></li>
+												<li><h:inputText size="50" value="#{q.answer3}" z:placeholder="Ответ 3"/></li>
+												<li><h:inputText size="50" value="#{q.answer4}" z:placeholder="Ответ 4"/></li>
+											</ul>
+										</h:column>
+										
+										<h:column>
+											<h:commandLink actionListener="#{courseEdit.delQuest(q)}" value="[X]" title="Удалить вопрос">
+												<f:ajax execute="questData" render="questData"/>
+											</h:commandLink>
+										</h:column>
+										
+									</h:dataTable>
 
-					
-				</h:form>
+									
+									<div class="spacer" style="height: 20px;"></div>
+									<h:commandButton action="#{courseEdit.update()}" value="#{courseEdit.newCourse? 'Создать': 'Изменить'}" 
+													 styleClass="btn btn-main-theme btn-md"/>
+									</div>
 
-            </ui:define>
+							</h:form>
 
-        </ui:composition>
+						</div>
+					</article>
+				</div>
+				<script src="/mm-res/js/custom-file-input.js"></script>
+			
+		</ui:define>
+		
+	</ui:composition>
 
-    </body>
 </html>
+

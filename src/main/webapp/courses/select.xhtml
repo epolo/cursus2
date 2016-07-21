@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:jsf="http://xmlns.jcp.org/jsf"
+	  xmlns:z="http://xmlns.jcp.org/jsf/passthrough">
+	  <!-- xmlns:p="http://primefaces.org/ui" -->
+
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
+
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewParam name="uuid" value="#{courseSel.courseUuid}"/>
+				<f:viewAction action="#{ctx.checkNotNull(courseSel.course)}"/> 
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="side-menu">
+
+				<div class="col-sm-4 col-xs-12">
+					<aside id="sidebar-side" class="white-box roboto">
+						<div class="widget-side">
+							<h3 class="widget-title">Курсы</h3>
+
+							<ul class="toggle-navigation">
+								<ui:repeat value="#{db.discList}" var="d">
+								<li class="has-children-menu" jsf:rendered="#{not empty d.coursesCollection}">
+									<h:link value="#{d.name}">
+										<f:param name="dis" value="#{d.uuid}"/>
+									</h:link>
+									<ul class="sub-menu">
+										<ui:repeat value="#{d.coursesCollection}" var="c">
+										<li>
+											<h:link value="#{c.title}">
+												<f:param name="dis" value="#{d.uuid}"/>
+											</h:link>
+										</li>
+										</ui:repeat>
+									</ul>
+								</li>
+								</ui:repeat>
+							</ul>
+						</div>
+					</aside>
+				</div>
+
+		</ui:define>
+		
+		<ui:define name="content">
+			
+                <div class="col-sm-8 col-xs-12">
+					<article id="single-article" class="single-article white-box roboto">
+					  <div class="content-inner-side">
+							
+						<h3>
+							<h:outputText value="#{ctx.myCourses.contains(courseSel.course)? 'Вы записаны на курс': 'Запись на курс'}"/>
+						</h3>
+
+					<div class="course-block big-course">
+						<div class="top-side" data-mh="items-с">
+							<div class="icon-lr">
+								<div class="left">
+									<img src="#{app.avatar.getCourseUrl(courseSel.course, 'SMALL')}" alt=""/>
+								</div>
+								<div class="right">
+									<h5>#{courseSel.course.title}</h5>
+									<small>#{courseSel.course.disciplineId.name}</small>
+								</div>
+							</div>
+							<div><h:outputText value="#{courseSel.course.description}" escape="false"/></div>
+						</div>
+						
+							<div class="bottom-side" data-mh="items-d">
+								<div class="icon-lr">
+									<div class="left">
+										<img src="#{app.avatar.getUserUrl(courseSel.course.authorId, 'SMALL')}" alt=""/>
+									</div>
+									<div class="right">
+										<p class="name">
+											<h:link outcome="/professors/detail" includeViewParams="true" value="#{c.authorId.fullName}">
+												<f:param name="uuid" value="#{courseSel.course.authorId.uuid}"/>
+											</h:link>
+											<i class="fa fa-info-circle"></i>
+										</p>
+										<p>
+											Занятия с 
+											<h:outputText value="#{courseSel.course.startsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>  по
+											<h:outputText value="#{courseSel.course.endsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>
+										</p>
+									</div>
+								</div>
+								<div jsf:rendered="#{ctx.canSelectCourse(courseSel.course)}">
+									
+									<h:form>
+										
+										<h:dataTable value="#{courseSel.answers}" var="a" border="1">
+										
+											<f:facet name="header">
+												<h:outputText value="Ответьте, пожалуйста, на несколько вопросов" 
+															  rendered="#{not empty courseSel.answers}"/>
+											</f:facet>
+											
+											<f:facet name="footer">
+												<h:commandButton value="Записаться" action="#{courseSel.save}"/>
+											</f:facet>
+											
+											<h:column>
+												
+												<h:outputText value="Вопрос: " style="font-style: italic;"/>
+												<h:outputText value="#{a.question.body}"/>
+												<br/>
+												<h:outputText value="Варианты ответа" style="font-style: italic;"/>
+												<h:selectOneRadio value="#{a.selected}">
+													<f:selectItem itemValue="1" itemLabel="#{a.question.answer1}"/>
+													<f:selectItem itemValue="2" itemLabel="#{a.question.answer2}"/>
+													<f:selectItem itemValue="3" itemLabel="#{a.question.answer3}"/>
+													<f:selectItem itemValue="4" itemLabel="#{a.question.answer4}"/>
+												</h:selectOneRadio>
+												<br/>
+												<h:outputText value="или приведите свой:" style="font-style: italic;"/>
+												<h:inputText value="#{a.answer}"/>
+											</h:column>
+											
+										</h:dataTable>
+										
+									</h:form>
+									
+								</div>
+							</div>
+						
+					</div>
+
+						</div>
+					</article>
+				</div>
+			
+		</ui:define>
+		
+	</ui:composition>
+
+</html>
+

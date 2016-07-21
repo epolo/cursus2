@@ -1,81 +1,132 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core"
-	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+	  xmlns:jsf="http://xmlns.jcp.org/jsf"
+	  xmlns:p="http://primefaces.org/ui">
 
-    <body>
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
 
-        <ui:composition template="/WEB-INF/templates/main.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewParam name="dis" value="#{course.discUuid}"/>
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="side-menu">
 
-            <ui:define name="title">
-                Курсы
-            </ui:define>
+				<div class="col-sm-4 col-xs-12">
+					<aside id="sidebar-side" class="white-box roboto">
+						<div class="widget-side">
+							<h3 class="widget-title">Курсы</h3>
 
-            <ui:define name="content">
-				
-				<h:outputStylesheet name="css/content.css"/>
+							<ul class="toggle-navigation">
+								<ui:repeat value="#{db.discList}" var="d">
+								<li class="has-children-menu" jsf:rendered="#{not empty d.coursesCollection}">
+									<h:link value="#{d.name}">
+										<f:param name="dis" value="#{d.uuid}"/>
+									</h:link>
+									<ul class="sub-menu">
+										<ui:repeat value="#{d.coursesCollection}" var="c">
+										<li>
+											<h:link value="#{c.title}">
+												<f:param name="dis" value="#{d.uuid}"/>
+											</h:link>
+										</li>
+										</ui:repeat>
+									</ul>
+								</li>
+								</ui:repeat>
+							</ul>
+						</div>
+					</aside>
+				</div>
+			
+		</ui:define>
+		
+		<ui:define name="content">
+                
+                <div class="col-sm-8 col-xs-12">
+					<article id="single-article" class="single-article white-box roboto">
+					  <div class="content-inner-side">
+							
+						<p>Если Вы не нашли интересующий Вас курс, напишите нам по адресу:<br/><a href="#">info@ex-professo.org</a></p>
 
-					<h:form>
-						Показывать завершённые
-						<p:selectBooleanCheckbox value="#{course.showPast}">
-							<p:ajax update="coursesList" listener="#{course.update}"/>
-						</p:selectBooleanCheckbox>
+						</div>
+					</article>
+				</div>
+			
+				<div class="col-sm-8 col-xs-12" jsf:id="mainList">
+					
+					<ui:repeat value="#{course.coursesLst}" var="c" varStatus="st">
+					<div class="course-block big-course">
+						<div class="top-side" data-mh="items-с">
+							<div class="icon-lr">
+								<div class="left">
+									<img src="#{app.avatar.getCourseUrl(c, 'SMALL')}" alt=""/>
+								</div>
+								<div class="right">
+									<h5>#{c.title}</h5>
+									<small>#{c.disciplineId.name}</small>
+								</div>
+							</div>
+							<div><h:outputText value="#{c.description}" escape="false"/></div>
+						</div>
 						
-						<h:dataTable id="coursesList" value="#{course.coursesLst}" var="c" cellpadding="10">
-							
-							<p:column style="width: 80px;">
-								<div style="background-image: url(#{app.getCourseAvatar(c)})" class="avatar-small" />
-							</p:column>
-							
-							<p:column>
+							<div class="bottom-side" data-mh="items-d">
+								<div class="icon-lr">
+									<div class="left">
+										<img src="#{app.avatar.getUserUrl(c.authorId, 'SMALL')}" alt=""/>
+									</div>
+									<div class="right">
+										<p class="name">
+											<h:link outcome="/professors/detail" includeViewParams="true" value="#{c.authorId.fullName}">
+												<f:param name="uuid" value="#{c.authorId.uuid}"/>
+											</h:link>
+											<i class="fa fa-info-circle"></i>
+										</p>
+										<p>
+											Занятия с 
+											<h:outputText value="#{c.startsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>  по
+											<h:outputText value="#{c.endsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>
+										</p>
+									</div>
+								</div>
+								<div class="course-button" jsf:rendered="#{ctx.canSelectCourse(c)}">
+									<h:link outcome="/courses/select" value="Записатьcя на курс" styleClass="btn btn-main-theme btn-md">
+										<f:param name="uuid" value="#{c.uuid}"/>
+									</h:link>
+								</div>
+								<div class="meta-side">
+									<span class="meta-span">
+										<span class="success" jsf:rendered="#{ctx.myCourses.contains(o)}"><i class="fa fa-group"></i> Курс выбран</span>
+										<span class="success" jsf:rendered="#{c.open}"><i class="fa fa-group"></i> Идёт набор</span>
+										<span class="success" jsf:rendered="#{c.started and not c.finished}"><i class="fa fa-group"></i> Идёт обучение</span>
+										<span class="red" jsf:rendered="#{c.finished}"><i class="fa fa-group"></i> Курс завершён</span>
+										<span class="primary"><img src="/mm-res/img/book.png" alt=""/> <h:outputText value="#{c.subTitle}"/> </span>
+									</span>
+								</div>
+								<div jsf:rendered="#{ctx.inRole('admin')}">
+									<h:link outcome="/courses/edit" value="Редактировать курс">
+										<f:param name="uuid" value="#{c.uuid}"/>
+									</h:link>
+								</div>
+							</div>
+						
+					</div>
+					</ui:repeat>
 
-								<p:link outcome="detail" value="#{c.title}">
-									<f:param name="courseId" value="#{c.id}"/>
-								</p:link>
-								
-									<p:link outcome="/professors/detail" rendered="#{not empty(c.authorId.name)}"
-											style="padding-left: 30px;"
-											value="[#{c.authorId.name}]">
-										<f:param name="profId" value="#{c.authorId.id}"/>
-									</p:link>
-									<br/>
-									<h:outputText value="#{c.tags}"/>
-									<br/>
-									<h:outputText value="#{c.subTitle}"/>
-									<ezcomp:courseState_1 course="#{c}"/>
-<ui:remove>
-										<p:outputPanel rendered="#{c.open}" style="background-color: lightblue;">
-											<span class="cursus-icon icon-status icon-status-open"/>
-											<span class="status-open"> Идёт набор </span>
-											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
-														   class="but-icon icon-action-circle" title="Курс в списке"/>
-										</p:outputPanel>
-										<p:outputPanel rendered="#{c.started}" style="background-color: #F0D0D0;">
-											<span class="cursus-icon icon-status icon-status-begin"/>
-											<span class="status-begin"> Идёт обучение </span>
-											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
-														   class="but-icon icon-action-circle" title="Курс в списке"/>
-										</p:outputPanel>
-										<p:outputPanel rendered="#{c.finished}" style="background-color: lightgray;">
-											<span class="cursus-icon icon-status icon-status-close"/>
-											<span class="status-close"> Курс завершён </span>
-											<p:outputLabel rendered="#{ctx.isCourseOfUser(c)}" 
-														   class="but-icon icon-action-circle" title="Курс в списке"/>
-										</p:outputPanel>
-</ui:remove>									
-							</p:column>
+				</div>
+			
+		</ui:define>
+		
+	</ui:composition>
 
-						</h:dataTable>
-					</h:form>
-				
-            </ui:define>
-
-        </ui:composition>
-
-    </body>
 </html>
+

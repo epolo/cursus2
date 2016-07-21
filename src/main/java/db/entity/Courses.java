@@ -77,6 +77,8 @@ public class Courses implements Serializable {
 	private long price;
 	@Column(name = "old_id")
 	private Integer oldId;
+	@Column(name = "uuid")
+	private String uuid;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
 	private Collection<CoursesStudents> coursesStudentsCollection;
 	@OneToMany(mappedBy = "course")
@@ -225,6 +227,14 @@ public class Courses implements Serializable {
 
 	public void setOldId(Integer oldId) {
 		this.oldId = oldId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public Collection<CoursesStudents> getCoursesStudentsCollection() {

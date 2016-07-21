@@ -2,15 +2,16 @@ package web.mbeans;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import db.entity.Courses;
+import db.entity.Disciplines;
 import db.entity.Users;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -21,7 +22,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 @ManagedBean(name = "app")
 @ApplicationScoped
@@ -36,10 +36,12 @@ public class AppMBean {
 
 	@ManagedProperty("#{msg}")
 	private ResourceBundle msg;
+	private List<Locale> supportedLocales;
 	private Properties props;
 	private Properties ggleProps;
 	private Properties awsProps;
 	private AWSCredentials awsCredentials;
+	private AvatarImage avatar;
 	
 	public AppMBean() {
 	}
@@ -47,10 +49,21 @@ public class AppMBean {
 	@PostConstruct
 	void init() {
 		reloadProps();
+		avatar = new AvatarImage();
+		avatar.setUploadDir(awsProps.containsKey("avatar_uploadDir")? awsProps.getProperty("avatar_uploadDir") :
+				"/Java/projects/cursus2m/deploy/tomcat/webapps/ROOT/upload/");
+		avatar.setUploadUrl(awsProps.containsKey("avatar_uploadUrl")? awsProps.getProperty("avatar_uploadUrl") :
+				"/upload/");
+		supportedLocales = new ArrayList<>();
+		FacesContext.getCurrentInstance().getApplication().getSupportedLocales().forEachRemaining(loc -> supportedLocales.add(loc));
 	}
 	
 	public void setMsg(ResourceBundle msg) {
 		this.msg = msg;
+	}
+
+	public List<Locale> getSupportedLocales() {
+		return supportedLocales;
 	}
 	
 	public String[] getDirs() {
@@ -97,7 +110,7 @@ public class AppMBean {
 			return p;
 		}
 	}
-	
+
 	public void reloadProps() {
 		PropertiesLoader loader = new PropertiesLoader();
 		props = loader.loadProp(PROPS_FILE_PARAM);
@@ -108,11 +121,17 @@ public class AppMBean {
 												awsProps.getProperty("aws_secret_access_key"));
 	}
 
+	public void reloadBundle() {
+		ResourceBundle.clearCache();
+	}
+	
+	@Deprecated
 	public String getUserAvatar(Users u) {
 		String a = u.getAvatarUrl();
 		return (a == null || a.isEmpty()? msg.getString("default.user.avatar"): a);
 	}
 
+	@Deprecated
 	public String getCourseAvatar(Courses c) {
 		String a = c.getCoverUrl();
 		return (a == null || a.isEmpty()? msg.getString("default.course.avatar"): a);
@@ -120,5 +139,9 @@ public class AppMBean {
 
 	public HashMap<String, Integer> getExtUsersMap() {
 		return extUsersMap;
+	}
+
+	public AvatarImage getAvatar() {
+		return avatar;
 	}
 }

@@ -1,60 +1,104 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html"
-	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp">
+	  xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-    <body>
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
 
-        <ui:composition template="/WEB-INF/templates/main.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewParam name="dis" value="#{prof.discUid}"/>
+				<f:viewParam name="uuid" value="#{prof.selectedUuid}" required="true"/>
+				<f:viewAction action="#{ctx.checkNotNull(prof.selected)}"/>
+			</f:metadata>
+		</ui:define>
+		
+		<ui:define name="side-menu">
 
-			<ui:define name="metadata">
-				<f:metadata>
-					<f:viewParam name="profId" value="#{prof.selectedId}"/>
-					<f:viewAction action="#{ctx.checkNotNull(prof.selected)}"/>
-				</f:metadata>
-			</ui:define>
-
-            <ui:define name="title">
-                О преподавателе
-            </ui:define>
-
-            <ui:define name="content">
-            
-				<h:outputStylesheet name="css/content.css"/>
-				
-				<table border="0">
-					<tr valign="top">
-						<td>
-							<div style="background-image: url(#{app.getUserAvatar(prof.selected)});" class="avatar-medium" />
-						</td>
-						<td>
-							<h1> 
-								<span style="margin-right: 40px;"> #{prof.selected.name} </span>
-							</h1>
-
-							<div>
-								<h:outputText value="#{prof.selected.personalInfo}" escape="false"/>
-							</div>
-
-						</td>
-					</tr>
-				</table>
-
-				<p:dataList value="#{prof.selected.coursesCollection}" var="c" itemStyleClass="course-list">
-					<p:link outcome="/courses/detail" value="#{c.title}">
-						<f:param name="courseId" value="#{c.id}"/>
-					</p:link>
-					<ezcomp:courseState course="#{c}"/>
-				</p:dataList>
-					
-            </ui:define>
-
+				<div class="col-sm-4 col-xs-12">
+					<aside id="sidebar-side" class="white-box roboto">
+						<div class="widget-side">
+							<h3 class="widget-title">Преподаватели</h3>
+							<ul class="teacher-navigation">
+								<ui:repeat value="#{prof.profList}" var="p">
+									<li><h:link outcome="detail" value="#{p.fullName}" includeViewParams="true">
+											<f:param name="uuid" value="#{p.uuid}"/>
+										</h:link></li>
+								</ui:repeat>
+							</ul>
+						</div>
+					</aside>
+				</div>
 			
-        </ui:composition>
+		</ui:define>
+		
+		<ui:define name="content">
+				<div class="col-sm-8 col-xs-12">
+					<div class="author-block single-author-block">
+						<img src="#{app.avatar.getUserUrl(prof.selected, 'LARGE')}" alt=""/>
+						<h3><h:outputText value="#{prof.selected.fullName}"/></h3>
+						<div><h:outputText value="#{prof.selected.personalInfo}" escape="false"/></div>
+					</div>
+                    
+					<ui:repeat value="#{prof.selected.coursesCollection}" var="c">
+						<div class="course-block big-course">
+							<div class="top-side" data-mh="items-с">
+								<div class="icon-lr">
+									<div class="left">
+										<img src="#{app.avatar.getCourseUrl(c, 'SMALL')}" alt=""/>
+									</div>
+									<div class="right">
+										<h5><h:outputText value="#{c.title}"/></h5>
+										<small><h:outputText value="#{c.tags}"/></small>
+									</div>
+								</div>
+								<div><h:outputText value="#{c.description}" escape="false"/></div>
+							</div>
+							<div class="bottom-side" data-mh="items-d">
+								<div class="icon-lr">
+									<div class="left">
+										<img src="#{app.avatar.getUserUrl(prof.selected, 'SMALL')}" alt=""/>
+									</div>
+									<div class="right">
+										<p class="name"> <h:outputText value="#{prof.selected.fullName}"/> <i class="fa fa-info-circle"></i></p>
+										<p>
+											Занятия с 
+											<h:outputText value="#{c.startsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>  по
+											<h:outputText value="#{c.endsAt}">
+												<f:convertDateTime type="date" dateStyle="medium"/>
+											</h:outputText>
+										</p>
+									</div>
+								</div>
+								<div class="course-button" jsf:rendered="#{c.open}">
+									<a href="#" class="btn btn-main-theme btn-md">Записатьcя на курс</a>
+								</div>
+								<div class="meta-side">
+									<span class="meta-span">
+										<span class="success" jsf:rendered="#{c.open}"><i class="fa fa-group"></i> Идёт набор</span>
+										<span class="success" jsf:rendered="#{c.started and not c.finished}"><i class="fa fa-group"></i> Идёт обучение</span>
+										<span class="red" jsf:rendered="#{c.finished}"><i class="fa fa-group"></i> Курс завершён</span>
+										<span class="primary"><img src="/mm-res/img/book.png" alt=""/> <h:outputText value="#{c.subTitle}"/> </span>
+									</span>
+								</div>
+								<div jsf:rendered="#{ctx.inRole('admin')}">
+									<h:link outcome="/courses/edit" value="Редактировать курс">
+										<f:param name="uuid" value="#{c.uuid}"/>
+									</h:link>
+								</div>
+							</div>
+						</div>
+					</ui:repeat>
+					
+				</div>
+		</ui:define>
+		
+	</ui:composition>
 
-    </body>
 </html>
+

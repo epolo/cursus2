@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import db.entity.Courses;
-import db.entity.Topics;
 import db.entity.Users;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +15,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -41,14 +39,14 @@ public class ContextMBean implements Serializable {
 	@ManagedProperty("#{db}")
 	DbMBean db;
 
-	private String lang;
+	private Locale lang;
 	private String userName;
 	private Users user;
 	private List<Courses> myCourses;
 	private String extCookie;
 	private String invCode;
 	private String codeRequest;
-	private boolean forumAdmin;
+//	private boolean forumAdmin;
 	static final String EXTSESSION_COOKIE = "EXTSESSION";
 
 	public ContextMBean() {
@@ -164,7 +162,7 @@ public class ContextMBean implements Serializable {
 	public boolean isAuth() {
 		return userName != null;
 	}
-
+/*
 	public boolean isForumAdmin() {
 		return forumAdmin;
 	}
@@ -172,7 +170,7 @@ public class ContextMBean implements Serializable {
 	public void setForumAdmin(boolean forumAdmin) {
 		this.forumAdmin = forumAdmin;
 	}
-
+*/
 	/**
 	 * @param roles - comma separated roles
 	 */
@@ -189,12 +187,19 @@ public class ContextMBean implements Serializable {
 				return true;
 		return false;
 	}
-	
-	public void checkUserRole(String r) throws IOException {
-		if (!inRole(r)) {
+
+	public void checkAccess(boolean condition) throws IOException {
+		if (!condition)
 			FacesContext.getCurrentInstance().getExternalContext()
 					.responseSendError(HttpServletResponse.SC_UNAUTHORIZED, "Access forbidden!");
-		}
+	}
+	
+	public void checkUserRole(String r) throws IOException {
+//		if (!inRole(r)) {
+//			FacesContext.getCurrentInstance().getExternalContext()
+//					.responseSendError(HttpServletResponse.SC_UNAUTHORIZED, "Access forbidden!");
+//		}
+		checkAccess(inRole(r));
 	}
 
 	public void checkNotNull(Object o) throws IOException {
@@ -205,22 +210,34 @@ public class ContextMBean implements Serializable {
 	}
 
 	public boolean isCourseOfUser(Courses c) {
-		return user != null && getMyCourses().contains(c);
+		return user != null && c != null && getMyCourses().contains(c);
 	}
 
+	public boolean canSelectCourse(Courses c) {
+		return inRole("*") && c.isOpen() && !isCourseOfUser(c);
+	}
+	
+	public boolean canEditCourse(Courses c) {
+		return c != null && c.getAuthorId() != null 
+				&& (inRole("admin") 
+					|| (inRole("teacher") && c.getAuthorId().getId() == user.getId()));
+	}
+	
 	private String getUserDir() {
 		return user == null? null: app.getS3Dir() + 'u' + user.getId() + '/';
 	}
 
-	public String getLang() {
+	public Locale getLang() {
 		if (lang == null) {
-			//// TODO: resolve language from User Agent parameters
-			lang = "ru";
+			Locale loc = FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+			if (!app.getSupportedLocales().contains(loc))
+				loc = null;
+			lang = loc != null? loc: new Locale("ru");
 		}
 		return lang;
 	}
 
-	public void setLang(String lang) {
+	public void setLang(Locale lang) {
 		this.lang = lang;
 	}
 
@@ -257,14 +274,14 @@ public class ContextMBean implements Serializable {
 			}
 		return res;
 	}
-
+/*
 	public void changeForumAdmin() {
 		if (inRole("admin")) {
 			app.getExtUsersMap().put(extCookie, forumAdmin? 1: user.getPhpId());
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Forum admin status: " + forumAdmin));
 		}
 	}
-	
+*/	
 	/**
 	 * @returns true if user is registered
 	 */

@@ -3,7 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	  xmlns:cc="http://xmlns.jcp.org/jsf/composite"
 	  xmlns:p="http://primefaces.org/ui"
-	  xmlns:h="http://xmlns.jcp.org/jsf/html">
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ezcomp="http://xmlns.jcp.org/jsf/composite/ezcomp"
+	  xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	  xmlns:f="http://xmlns.jcp.org/jsf/core"
+	  xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 	<!-- INTERFACE -->
 	<cc:interface>
@@ -13,6 +18,13 @@
 	<!-- IMPLEMENTATION -->
 	<cc:implementation>
 		
+		<span style="margin-right: 10px;">
+			<ui:repeat value="#{app.supportedLocales}" var="l" varStatus="st">
+				<h:outputText value=" | " rendered="#{not st.first}"/>
+				<h:commandLink action="#{ctx.setLang(l)}" value="#{l.language}" title="#{l.getDisplayName(l)}" 
+							   style="font-weight: #{l eq view.locale? 'bold': 'normal'}; text-decoration: #{l eq view.locale? 'underline': 'none'};"/>
+			</ui:repeat>
+		</span>
 		<nav id="main-menu" class="#{cc.attrs.isIndex? '': 'in-menu-nav'}">
 			<ul>
 				<li class="menu-item-has-children">
@@ -26,24 +38,57 @@
 				<li class="menu-item-has-children">
 					<h:link outcome="/courses/index" value="#{msg.mainmenu_courses}"/>
 					<ul class="sub-menu">
-						<li><a href="/courses/index">Математика</a></li>
-						<li><a href="/courses/index">Русский язык</a></li>
-						<li><a href="/courses/index">Интеллектуальный клуб</a></li>
-						<li><a href="/courses/index">Бридж</a></li>
-						<li><a href="/courses/index">Все курсы</a></li>
+						<ui:repeat value="#{db.discList}" var="d">
+							<li jsf:rendered="#{not empty d.coursesCollection}">
+								<h:link outcome="/courses/index" value="#{d.name}">
+									<f:param name="dis" value="#{d.uuid}"/>
+								</h:link>
+							</li>
+						</ui:repeat>
+						<li>
+							<h:link outcome="/courses/index" value="#{msg.mainmenu_courses_all}"/>
+						</li>
 					</ul>
 				</li>
 				<li class="menu-item-has-children">
 					<h:link outcome="/professors/index" value="#{msg.mainmenu_professors}" />
 					<ul class="sub-menu">
-						<li><a href="/professors/index">Математика</a></li>
-						<li><a href="/professors/index">Русский язык</a></li>
-						<li><a href="/professors/index">Интеллектуальный клуб</a></li>
-						<li><a href="/professors/index">Бридж</a></li>
+						<ui:repeat value="#{db.discList}" var="d">
+							<li jsf:rendered="#{not empty d.coursesCollection}">
+								<h:link outcome="/professors/index" value="#{d.name}">
+									<f:param name="dis" value="#{d.uuid}"/>
+								</h:link>
+							</li>
+						</ui:repeat>
+						<li>
+							<h:link outcome="/professors/index" value="#{msg.mainmenu_courses_all}"/>
+						</li>
 					</ul>
 				</li>
+				<c:if test="#{ctx.auth}">
+				<li class="menu-item-has-children">
+					<a href="#">#{ctx.userName}</a>
+					<ul class="sub-menu">
+						<c:if test="#{ctx.inRole('*')}">
+							<li><h:link outcome="/personal/index" value="#{msg.usermenu_profile}"/></li>
+							<li><h:link outcome="/personal/my-courses" value="#{msg.usermenu_mycourses}"/></li>
+						</c:if>
+						<c:if test="#{!ctx.inRole('*')}">
+							<li><h:link outcome="/invitation" value="#{msg.usermenu_invitation}"/></li>
+						</c:if>
+						<li><h:commandLink value="#{msg.usermenu_exit}" action="#{req.logout()}"/></li>
+					</ul>
+				</li>
+				</c:if>
 			</ul>
 		</nav>
+
+		<a href="#{request.contextPath}/login" jsf:rendered="#{!ctx.auth}" class="btn btn-main-theme">
+			<h:outputText value="#{msg.header_enter}"/>
+		</a>
+<ui:remove>
+		<h:link rendered="#{!ctx.auth}"   outcome="/users" class="btn btn-main-theme" value="#{msg.header_enter}"/>
+</ui:remove>
 			
 	</cc:implementation>
 </html>

@@ -1,7 +1,6 @@
 package web.mbeans;
 
 import db.entity.Disciplines;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;

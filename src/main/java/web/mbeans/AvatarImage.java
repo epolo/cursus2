@@ -18,7 +18,7 @@ public class AvatarImage {
 		final String suffix;
 		final int size;
 		AVATAR_TYPE(String suffix, int size) { this.suffix = suffix; this.size = size; }
-// 		static AVATAR_TYPE 
+
 	}
 	
 	// static final String UPLOAD_URL = "/upload/";

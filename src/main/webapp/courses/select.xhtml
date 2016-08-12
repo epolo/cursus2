@@ -25,8 +25,8 @@
 							<h3 class="widget-title">Курсы</h3>
 
 							<ul class="toggle-navigation">
-								<ui:repeat value="#{db.discList}" var="d">
-								<li class="has-children-menu" jsf:rendered="#{not empty d.coursesCollection}">
+								<ui:repeat value="#{db.discWCoursesList}" var="d">
+								<li class="has-children-menu">
 									<h:link value="#{d.name}">
 										<f:param name="dis" value="#{d.uuid}"/>
 									</h:link>

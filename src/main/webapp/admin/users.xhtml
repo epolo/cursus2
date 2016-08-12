@@ -2,22 +2,41 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+	  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	  xmlns:f="http://xmlns.jcp.org/jsf/core"
-	  xmlns:p="http://primefaces.org/ui">
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:z="http://xmlns.jcp.org/jsf/passthrough">
 
-	<f:view>
-		<f:metadata>
-			<f:viewAction immediate="true" action="#{ctx.checkUserRole('admin')}"/>
-		</f:metadata>
+	<ui:composition template="/WEB-INF/templates/main2.xhtml">
+
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewAction immediate="true" action="#{ctx.checkUserRole('admin')}"/>
+			</f:metadata>
+		</ui:define>
+
+		<ui:define name="side-menu">
+
+			<div class="col-sm-4 col-xs-12">
+				<aside id="sidebar-side" class="white-box roboto">
+					<div class="widget-side">
+						<h3 class="widget-title">Разделы</h3>
+
+						<ul>
+							<li><h:link value="Админка" outcome="/admin/index"/></li>
+							<li><h:link value="Курсы" outcome="/admin/courses"/></li>
+							<li><h:link value="Пользователи" outcome="/admin/users"/></li>
+						</ul>
+					</div>
+				</aside>
+			</div>
+			
+		</ui:define>
 		
-    <h:head>
-        <title>Users</title>
-    </h:head>
-    <h:body>
-		
-		<p:panel header="Users">
-		
-			<p:link outcome="/index" value="Home page"/>
+		<ui:define name="content">
+
+			<h2> Пользователи </h2>
+
 			
 			<h:form>
 
@@ -78,10 +97,9 @@
 			
 			</h:form>
 			
-		</p:panel>
-		
-    </h:body>
-		
-	</f:view>
-</html>
 
+		</ui:define>
+		
+	</ui:composition>
+
+</html>

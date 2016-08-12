@@ -144,6 +144,10 @@ public class DbMBean {
 			em.close();
 		}
 	}
+	
+	public List<Disciplines> getDiscWCoursesList() {
+		return select(Disciplines.class, "select distinct c.disciplineId from Courses c where c.isDelete=false");
+	}
 
 	public List<Disciplines> getDiscList() {
 		return select(Disciplines.class, "select o from Disciplines o");

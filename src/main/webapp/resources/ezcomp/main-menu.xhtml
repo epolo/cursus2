@@ -38,7 +38,7 @@
 				<li class="menu-item-has-children">
 					<h:link outcome="/courses/index" value="#{msg.mainmenu_courses}"/>
 					<ul class="sub-menu">
-						<ui:repeat value="#{db.discList}" var="d">
+						<ui:repeat value="#{db.discWCoursesList}" var="d">
 							<li jsf:rendered="#{not empty d.coursesCollection}">
 								<h:link outcome="/courses/index" value="#{d.name}">
 									<f:param name="dis" value="#{d.uuid}"/>
@@ -53,7 +53,7 @@
 				<li class="menu-item-has-children">
 					<h:link outcome="/professors/index" value="#{msg.mainmenu_professors}" />
 					<ul class="sub-menu">
-						<ui:repeat value="#{db.discList}" var="d">
+						<ui:repeat value="#{db.discWCoursesList}" var="d">
 							<li jsf:rendered="#{not empty d.coursesCollection}">
 								<h:link outcome="/professors/index" value="#{d.name}">
 									<f:param name="dis" value="#{d.uuid}"/>
@@ -72,6 +72,9 @@
 						<c:if test="#{ctx.inRole('*')}">
 							<li><h:link outcome="/personal/index" value="#{msg.usermenu_profile}"/></li>
 							<li><h:link outcome="/personal/my-courses" value="#{msg.usermenu_mycourses}"/></li>
+						</c:if>
+						<c:if test="#{ctx.inRole('admin')}">
+							<li><h:link outcome="/admin/index" value="Adminka"/></li>
 						</c:if>
 						<c:if test="#{!ctx.inRole('*')}">
 							<li><h:link outcome="/invitation" value="#{msg.usermenu_invitation}"/></li>

@@ -34,7 +34,7 @@
 
 
 					<ui:repeat value="#{ctx.user.coursesCollection}" var="c" varStatus="st">
-					<div class="course-block big-course">
+						<div class="course-block big-course" jsf:rendered="#{not c.isDelete}">
 						<div class="top-side" data-mh="items-с">
 							<div class="icon-lr">
 								<div class="left">
@@ -88,7 +88,7 @@
 					<h:outputText rendered="#{empty ctx.myCourses}" value="Вы пока не выбрали ни один курс"/>
 									  
 					<ui:repeat value="#{ctx.myCourses}" var="c" varStatus="st">
-					<div class="course-block big-course">
+						<div class="course-block big-course" jsf:rendered="#{not c.isDelete}">
 						<div class="top-side" data-mh="items-с">
 							<div class="icon-lr">
 								<div class="left">

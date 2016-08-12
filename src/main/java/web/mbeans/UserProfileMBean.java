@@ -1,15 +1,8 @@
 package web.mbeans;
 
 import db.entity.Users;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -18,8 +11,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Part;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 @ManagedBean(name = "profile")
 @ViewScoped
@@ -58,9 +49,9 @@ public class UserProfileMBean implements Serializable {
 	}
 
 	public Users getUser() {
-		if (user == null) {
-			user = ctx.getUser();
-		}
+//		if (user == null) {
+//			user = ctx.getUser();
+//		}
 		return user;
 	}
 
@@ -72,6 +63,18 @@ public class UserProfileMBean implements Serializable {
 		this.part = part;
 	}
 
+	public String getUserUuid() {
+		return user == null? null: user.getUuid();
+	}
+	
+	public void setUserUuid(String uuid) {
+		if (uuid == null || uuid.isEmpty())
+			return;
+		if (user != null && uuid.equalsIgnoreCase(user.getUuid()))
+			return;
+		user = db.findByUuid(Users.class, uuid);
+	}
+	
 	public void saveUser() {
 		if (part != null && part.getSize() > 0) {
 			try {
@@ -81,7 +84,10 @@ public class UserProfileMBean implements Serializable {
 				logger.log(Level.SEVERE, "Image upload error", ex);
 			}
 		}
-		ctx.setUser(db.merge(user));
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Changes are successfully saved."));
+		user = db.merge(user);
+		if (user.equals(ctx.getUser()))
+			ctx.setUser(user);
+
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Изменения сохранены"));
 	}
 }

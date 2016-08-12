@@ -135,9 +135,17 @@
 
 									
 									<div class="spacer" style="height: 20px;"></div>
-									<h:commandButton action="#{courseEdit.update()}" value="#{courseEdit.newCourse? 'Создать': 'Изменить'}" 
+										<h:commandButton action="#{courseEdit.update()}" value="#{courseEdit.newCourse? 'Создать': 'Изменить'}" 
 													 styleClass="btn btn-main-theme btn-md"/>
-									</div>
+
+									<h:panelGroup layout="span" rendered="#{not courseEdit.newCourse}">
+											<h:commandButton action="#{courseEdit.deactivate()}" value="Удалить курс" 
+															 style="margin-left: 5em; color: red;"/>
+					 						<h:outputText style="font-size: smaller; padding-left: 1em;" 
+													  value="Для восстановления курса обратитесь к администратору"/>
+									</h:panelGroup>
+
+								</div>
 
 							</h:form>
 

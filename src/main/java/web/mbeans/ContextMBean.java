@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -42,7 +43,7 @@ public class ContextMBean implements Serializable {
 	private Locale lang;
 	private String userName;
 	private Users user;
-	private List<Courses> myCourses;
+//	private List<Courses> myCourses;
 	private String extCookie;
 	private String invCode;
 	private String codeRequest;
@@ -152,11 +153,14 @@ public class ContextMBean implements Serializable {
 	}
 	
 	public List<Courses> getMyCourses() {
-		if (user != null && myCourses == null) {
-			myCourses = db.select(Courses.class, "select c.courseId from CoursesStudents c where c.studentId.id = ?1", 
+		if (user != null) {
+				//&& myCourses == null) {
+			// myCourses = 
+			return db.select(Courses.class, 
+					"select c.courseId from CoursesStudents c where c.courseId.isDelete=false and c.studentId.id = ?1", 
 					user.getId());
 		}
-		return myCourses;
+		return null;	// myCourses;
 	}
 
 	public boolean isAuth() {
@@ -309,5 +313,10 @@ public class ContextMBean implements Serializable {
 	public String codeReq() {
 		FacesContext.getCurrentInstance().addMessage("code_req", new FacesMessage("Invitation request processing -- not yet implemented..."));
 		return null;
+	}
+	
+	public void reload() {
+		if (user != null && user.getId() > 0)
+			user = db.getEntityManager().getReference(Users.class, user.getId());
 	}
 }

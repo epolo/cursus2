@@ -2,6 +2,7 @@ package web.mbeans;
 
 import db.entity.Courses;
 import db.entity.Disciplines;
+import db.entity.Users;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
@@ -185,6 +186,19 @@ db.clearCache();
 				new FacesMessage((create? "Курс создан.": "Курс изменён."), course.getTitle()));
 		if (create)
 			ctx.getUser().getCoursesCollection().add(course);
+	}
+	
+	public String deactivate() {
+		course.setIsDelete(true);
+		course.setUpdatedAt(new Date());
+		course = db.merge(course);
+
+// WORKAROUND for cache syncro...
+db.clearCache();
+if (ctx.getUser().equals(course.getAuthorId()))
+	ctx.reload();
+
+		return "/courses/index";
 	}
 
 	public void addQuest() {

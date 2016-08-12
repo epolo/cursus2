@@ -10,8 +10,9 @@
 
 		<ui:define name="metadata">
 			<f:metadata>
-				<f:viewAction immediate="true" action="#{ctx.checkUserRole('*')}"/>
-				<f:viewAction action="#{profile.setUser(ctx.user)}"/>
+				<f:viewAction immediate="true" action="#{ctx.checkUserRole('admin')}"/>
+				<f:viewParam name="uuid" value="#{profile.userUuid}"/>
+				<f:viewAction action="#{ctx.checkNotNull(profile.user)}"/>
 			</f:metadata>
 		</ui:define>
 		
@@ -23,7 +24,9 @@
 				<div class="col-sm-8 col-xs-12">
 					<article id="single-article" class="single-article white-box roboto">
 						<div class="content-inner-side">
-							<h3>Персональный профиль</h3>
+							<h3>Профиль преподавателя 
+								<h:outputText value="#{profile.user.name}"/>
+							</h3>
 							<h:form enctype="multipart/form-data" styleClass="add-information">
 								<h:inputText id="userName" value="#{profile.user.name}" styleClass="form-control" 
 											 z:placeholder="Имя *" required="true" requiredMessage="Необходимо указать имя"/>

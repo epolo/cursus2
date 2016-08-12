@@ -34,43 +34,31 @@
 		
 		<ui:define name="content">
 
-			<h2> Админка </h2>
-			
+			<h2> Курсы </h2>
+
 			<h:form>
 				
-			<h:messages id="msgs" showSummary="true" showDetail="true"/>
+			<h:dataTable value="#{dbAdm.delCourses}" var="c" border="1" cellpadding="3">
 				
-			<h:panelGrid columns="1">
-
-				<h:panelGroup layout="block">
+				<f:facet name="header">
+					<h:outputText value="Удалённые курсы [#{dbAdm.delCourses.size()}]"/>
+				</f:facet>
 					
-					Request JPQL
-					<br/>
-					<h:inputTextarea value="#{dbAdm.query}" cols="80" rows="5"/>
-					<br/>
-					<h:commandButton value="Submit" action="#{dbAdm.exec()}"/>
-					<br/>
-					<h:outputText rendered="#{dbAdm.update}" value="Updated #{dbAdm.qty} entries"/>
+				<h:column>
+					<h:outputText value="#{c.authorId.name}"/>
+				</h:column>
+				
+				<h:column>
+					<h:outputText value="#{c.title}"/>
+				</h:column>
+				
+				<h:column>
+					<h:commandLink action="#{dbAdm.restoreCourse(c)}" value="Восстановить"/>
+				</h:column>
+				
+			</h:dataTable>
 
-				</h:panelGroup> 
-
-				<h:dataTable rendered="#{not empty dbAdm.result}" value="#{dbAdm.result}" var="e">
-				
-					<f:facet name="header">
-						<h:outputText value="Query result"/>
-					</f:facet>
-					
-					<h:column>
-						<h:outputText value="#{e}"/>
-					</h:column>
-					
-				</h:dataTable>
-				
-				<h:commandButton value="Очистить кэш" action="#{db.clearCache}"/>
-				
-				<h:commandButton value="Обновить MessageBundle" action="#{app.reloadBundle}"/>
-			</h:panelGrid>
-			</h:form>
+ 			</h:form>
 
 		</ui:define>
 		

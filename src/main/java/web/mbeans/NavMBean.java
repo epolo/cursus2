@@ -116,7 +116,9 @@ public class NavMBean {
 						} else
 							crumbs.add(new Item(dis.getName(), "/" + part + "/index?dis=" + disUid));
 					}
-					if (page.startsWith("detail")) {
+					if (page.startsWith("detail") 
+							|| page.startsWith("select") 
+							|| page.startsWith("edit")) {
 						String uid = params.get("uuid");
 						if (uid != null) {
 							String name = null;
@@ -130,15 +132,15 @@ public class NavMBean {
 									name = u.getName();
 							}
 							if (name != null) {
-								page = "/" + part + "/detail?uuid=" + uid;
-								if (disUid != null)
-									page += "&dis=" + disUid;
+//								page = "/" + part + "/detail?uuid=" + uid;
+//								if (disUid != null)
+//									page += "&dis=" + disUid;
 								crumbs.add(new Item(name, page));
 							} else {
 								logger.warning("Unknown uuid=" + uid + " for request: " + rsp);
 							}
-						} else {
-							logger.warning("No uid for detail request: " + rsp + " ? " + params);
+//						} else {
+//							logger.warning("No uid for detail request: " + rsp + " ? " + params);
 						}
 					}
 				}

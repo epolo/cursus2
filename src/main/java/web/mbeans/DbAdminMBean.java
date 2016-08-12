@@ -1,5 +1,8 @@
 package web.mbeans;
 
+import db.entity.Courses;
+import db.entity.Users;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
@@ -17,17 +20,26 @@ public class DbAdminMBean {
 
 	@ManagedProperty("#{db}")
 	DbMBean db;
+	@ManagedProperty("#{ctx}")
+	ContextMBean ctx;
 	
 	private String query;
-	List<Object> result;
-	int qty;
-	boolean update;
+	private List<Object> result;
+	private int qty;
+	private boolean update;
+	
+	private List<Courses> delCourses;
+	
 	
 	public DbAdminMBean() {
 	}
 
 	public void setDb(DbMBean db) {
 		this.db = db;
+	}
+
+	public void setCtx(ContextMBean ctx) {
+		this.ctx = ctx;
 	}
 
 	public String getQuery() {
@@ -61,6 +73,12 @@ public class DbAdminMBean {
 	public void setUpdate(boolean update) {
 		this.update = update;
 	}
+
+	public List<Courses> getDelCourses() {
+		if (delCourses == null)
+			delCourses = db.select(Courses.class, "select c from Courses c where c.isDelete = true");
+		return delCourses;
+	}
 	
 	public void exec() {
 		FacesMessage msg = null;
@@ -92,4 +110,19 @@ public class DbAdminMBean {
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
+	public void restoreCourse(Courses c) {
+		c.setIsDelete(false);
+		c.setUpdatedAt(new Date());
+		c = db.merge(c);
+		delCourses.remove(c);
+		
+// WORKAROUND for cache syncro...
+db.clearCache();
+if (ctx.getUser().equals(c.getAuthorId()))
+	ctx.reload();
+
+		FacesContext.getCurrentInstance().addMessage(null, 
+				new FacesMessage("Курс восстановлен -- " + c.getTitle()));
+
+	}
 }

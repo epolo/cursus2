@@ -18,8 +18,8 @@ import org.apache.myfaces.config.element.FacesConfig;
 public class ProfessorsMBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	static final String PROFF_CONDITION = "o.status='active' and o.id in (select c.authorId.id from Courses c)";
-	static final String PROFF_CONDITION_1 = "o.status='active' and o.id in (select c.authorId.id from Courses c where c.disciplineId.id=%d)";
+	static final String PROFF_CONDITION = "o.status='active' and o.id in (select c.authorId.id from Courses c where c.isDelete=false)";
+	static final String PROFF_CONDITION_1 = "o.status='active' and o.id in (select c.authorId.id from Courses c where c.isDelete=false and c.disciplineId.id=%d)";
 	
 	@ManagedProperty(value = "#{db}")
 	private DbMBean db;
